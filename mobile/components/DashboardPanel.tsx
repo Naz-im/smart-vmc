@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
 import { Card } from './ui/Card';
-import StatusDisplay from './dashboard/StatusDisplay';
-import SensorRow from './dashboard/SensorRow';
-import ControlPanel from './dashboard/ControlPanel';
+// ATTENTION: Changement des imports de default (sans {}) à named (avec {})
+import { StatusDisplay } from './dashboard/StatusDisplay'; 
+import { SensorRow } from './dashboard/SensorRow';
+import { ControlPanel } from './dashboard/ControlPanel';
 import { WindowApiState } from '../hooks/useWindowApi';
 import { AppInput } from './ui/AppInput';
 import { AppButton } from './ui/AppButton';
