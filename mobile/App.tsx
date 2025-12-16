@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // <--- Import Storage
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useBLE } from './hooks/useBLE';
 import { useWindowApi } from './hooks/useWindowApi';
@@ -23,7 +23,7 @@ function App(): React.JSX.Element {
       AsyncStorage.setItem('server_ip', newIp);
   };
 
-  const { bleStatus, isScanning, scanAndConfigure } = useBLE();
+  const { bleStatus, isScanning, scanAndConfigure, scanAndGetIp } = useBLE();
   const { windowState, fetchStatus, sendCommand, sendAngle, toggleAutoMode } = useWindowApi(serverIp);
 
   useEffect(() => { 
@@ -32,11 +32,21 @@ function App(): React.JSX.Element {
 
   const handleConnect = (ssid: string, pass: string, lat: string, lon: string, ip: string) => {
     handleIpChange(ip);
-    
     scanAndConfigure(ssid, pass, lat, lon, ip, () => {
         setTab('DASHBOARD');
         fetchStatus();
     });
+  };
+
+  const handleAutoDetect = () => {
+      scanAndGetIp((detectedIp) => {
+          if (detectedIp && detectedIp !== "0.0.0.0") {
+            handleIpChange(detectedIp);
+            Alert.alert("Succès", `IP détectée : ${detectedIp}`);
+          } else {
+            Alert.alert("Info", "L'ESP32 n'est pas encore connecté au WiFi ou n'a pas d'IP.");
+          }
+      });
   };
 
   return (
@@ -50,6 +60,7 @@ function App(): React.JSX.Element {
                 isScanning={isScanning}
                 onConnect={handleConnect}
                 savedIp={serverIp}
+                onAutoDetect={handleAutoDetect}
             />
         )}
         {tab === 'DASHBOARD' && (
@@ -70,4 +81,5 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f0f2f5' },
   content: { padding: 20 },
 });
+
 export default App;
