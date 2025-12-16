@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { PermissionsAndroid, Platform, Alert } from 'react-native';
-import { BleManager } from 'react-native-ble-plx';
+import { BleManager, Device } from 'react-native-ble-plx';
 import { encode, decode } from 'base-64';
 
 const SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
@@ -50,18 +50,20 @@ export const useBLE = () => {
           .then((d) => {
             setBleStatus('Envoi Config...');
             const configStr = `${ssid};${pass};${lat};${lon}`;
-            return d.writeCharacteristicWithResponseForService(SERVICE_UUID, CHAR_UUID, encode(configStr));
+            return d.writeCharacteristicWithResponseForService(SERVICE_UUID, CHAR_UUID, encode(configStr))
+                .then(() => d);
           })
-          .then(() => {
+          .then(async (d) => {
             setBleStatus('Config envoyée ! ✅');
             setIsScanning(false);
             Alert.alert("Succès", "L'ESP32 redémarre...");
             setTimeout(onSuccess, 1000);
+            await d.cancelConnection();
           })
-          .catch((err) => {
+          .catch(async (err) => {
              setBleStatus('Erreur écriture: ' + err.message);
              setIsScanning(false);
-          });
+             if (device) await device.cancelConnection();
       }
     });
   };
@@ -85,18 +87,22 @@ export const useBLE = () => {
         
         device.connect()
           .then((d) => d.discoverAllServicesAndCharacteristics())
-          .then((d) => d.readCharacteristicForService(SERVICE_UUID, CHAR_IP_UUID))
-          .then((characteristic) => {
-            if (characteristic.value) {
-                const decodedIp = decode(characteristic.value);
+          .then((d) => d.readCharacteristicForService(SERVICE_UUID, CHAR_IP_UUID)
+            .then(char => ({ char, device: d }))
+          )
+          .then(async ({ char, device }) => {
+            if (char.value) {
+                const decodedIp = decode(char.value);
                 setBleStatus('IP Trouvée: ' + decodedIp);
                 onFound(decodedIp);
             }
+            await device.cancelConnection(); 
             setIsScanning(false);
           })
-          .catch((err) => {
+          .catch(async (err) => {
              setBleStatus('Erreur Lecture: ' + err.message);
              setIsScanning(false);
+             if (device) await device.cancelConnection();
           });
       }
     });
