@@ -13,7 +13,7 @@ Preferences preferences;
 // UUIDs BLE
 #define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHAR_CONFIG_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
-String API_URL = "http://10.166.120.14 :3001/api/window/log";
+String API_URL = "http://10.166.120.14:3001/api/window/log";
 String wifi_ssid = "";
 String wifi_pass = "";
 float latitude = 45.18;
