@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Card } from './ui/Card';
 import { AppInput } from './ui/AppInput';
@@ -18,6 +18,11 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
   const [lat, setLat] = useState('45.188');
   const [lon, setLon] = useState('5.724');
   const [ip, setIp] = useState(savedIp);
+
+  // AJOUT ICI : On met à jour le champ si l'IP sauvegardée change (ex: après auto-détection)
+  useEffect(() => {
+    setIp(savedIp);
+  }, [savedIp]);
 
   return (
     <Card>
