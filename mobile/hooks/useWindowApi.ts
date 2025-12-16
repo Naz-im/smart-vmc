@@ -9,91 +9,66 @@ export interface WindowState {
   autoMode: boolean;
 }
 
-const API_URL = 'http://10.166.120.14:3001'; 
-
-export const useWindowApi = () => {
+export const useWindowApi = (serverIp: string) => {
   const [windowState, setWindowState] = useState<WindowState | null>(null);
+  
+  const getBaseUrl = () => `http://${serverIp}:3001`;
 
-  // Récupérer l'état
   const fetchStatus = useCallback(async () => {
+    if (!serverIp) return; // Sécurité si pas d'IP
     try {
-      const res = await fetch(`${API_URL}/api/window/status`);
+      const res = await fetch(`${getBaseUrl()}/api/window/status`);
       const data = await res.json();
-      
       setWindowState(data);
     } catch (e) {
       console.log("Erreur API fetchStatus", e);
     }
-  }, []);
+  }, [serverIp]);
 
-  // Envoyer une commande (Ouvrir/Fermer)
   const sendCommand = useCallback(async (action: 'open' | 'close') => {
     try {
-      const res = await fetch(`${API_URL}/api/window/control`, {
+      const res = await fetch(`${getBaseUrl()}/api/window/control`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, autoMode: false })
       });
-      
       const data = await res.json();
-      
-      if (data.success && data.state) {
-        setWindowState(data.state);
-      } else {
-        fetchStatus();
-      }
-      
+      if (data.success && data.state) setWindowState(data.state);
+      else fetchStatus();
     } catch (e) {
       Alert.alert("Erreur", "Impossible d'envoyer la commande");
     }
-  }, [fetchStatus]);
+  }, [serverIp, fetchStatus]);
 
-  // Changer l'angle (Slider)
   const sendAngle = useCallback(async (val: number) => {
     const angleInt = Math.round(val);
     try {
-      const res = await fetch(`${API_URL}/api/window/control`, {
+      const res = await fetch(`${getBaseUrl()}/api/window/control`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ angle: angleInt, autoMode: false })
       });
-      
       const data = await res.json();
-      if (data.success && data.state) {
-        setWindowState(data.state);
-      }
-
+      if (data.success && data.state) setWindowState(data.state);
     } catch (e) {
       console.log(e);
     }
-  }, []);
+  }, [serverIp]);
 
-  // Activer/Désactiver le mode Auto
   const toggleAutoMode = useCallback(async (value: boolean) => {
     try {
-      const res = await fetch(`${API_URL}/api/window/control`, {
+      const res = await fetch(`${getBaseUrl()}/api/window/control`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ autoMode: value })
       });
-      
       const data = await res.json();
-      if (data.success && data.state) {
-        setWindowState(data.state);
-      } else {
-        fetchStatus();
-      }
-
+      if (data.success && data.state) setWindowState(data.state);
+      else fetchStatus();
     } catch (e) {
       Alert.alert("Erreur", "Erreur réseau");
     }
-  }, [fetchStatus]);
+  }, [serverIp, fetchStatus]);
 
-  return {
-    windowState,
-    fetchStatus,
-    sendCommand,
-    sendAngle,
-    toggleAutoMode
-  };
+  return { windowState, fetchStatus, sendCommand, sendAngle, toggleAutoMode };
 };

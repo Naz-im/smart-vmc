@@ -34,6 +34,7 @@ export const useBLE = () => {
     pass: string, 
     lat: string, 
     lon: string,
+    ip: string,
     onSuccess: () => void
   ) => {
     if (isScanning) return;
@@ -67,7 +68,7 @@ export const useBLE = () => {
           .then((d) => d.discoverAllServicesAndCharacteristics())
           .then((d) => {
             setBleStatus('Envoi Config...');
-            const configStr = `${ssid};${pass};${lat};${lon}`;
+            const configStr = `${ssid};${pass};${lat};${lon};${ip}`; 
             return d.writeCharacteristicWithResponseForService(SERVICE_UUID, CHAR_UUID, encode(configStr));
           })
           .then(() => {

@@ -8,54 +8,42 @@ import { AppButton } from './ui/AppButton';
 interface SetupPanelProps {
   bleStatus: string;
   isScanning: boolean;
-  onConnect: (ssid: string, pass: string, lat: string, lon: string) => void;
+  onConnect: (ssid: string, pass: string, lat: string, lon: string, ip: string) => void;
+  savedIp: string;
 }
 
-const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnect }) => {
+const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnect, savedIp }) => {
   const [ssid, setSsid] = useState('');
   const [password, setPassword] = useState('');
   const [lat, setLat] = useState('45.188');
   const [lon, setLon] = useState('5.724');
-
+  const [ip, setIp] = useState(savedIp);
   return (
     <Card>
-      <Text style={styles.sectionTitle}>Configuration WiFi</Text>
+      <Text style={styles.sectionTitle}>Configuration</Text>
       
+      <Text style={{fontWeight:'bold', marginTop:10}}>Serveur (PC)</Text>
       <AppInput 
-        value={ssid} 
-        onChangeText={setSsid} 
-        placeholder="SSID WiFi" 
-        autoCapitalize='none'
+        value={ip} 
+        onChangeText={setIp} 
+        placeholder="Ex: 192.168.1.50" 
+        keyboardType='numeric'
       />
-      <AppInput 
-        value={password} 
-        onChangeText={setPassword} 
-        secureTextEntry 
-        placeholder="Mot de passe"
-      />
+
+      <Text style={{fontWeight:'bold', marginTop:10}}>WiFi & Localisation</Text>
+      <AppInput value={ssid} onChangeText={setSsid} placeholder="SSID WiFi" autoCapitalize='none'/>
+      <AppInput value={password} onChangeText={setPassword} secureTextEntry placeholder="Mot de passe"/>
       
       <View style={{flexDirection:'row', gap:10}}>
-        <AppInput 
-          style={{flex:1}} 
-          value={lat} 
-          onChangeText={setLat} 
-          placeholder="Lat" 
-          keyboardType='numeric'
-        />
-        <AppInput 
-          style={{flex:1}} 
-          value={lon} 
-          onChangeText={setLon} 
-          placeholder="Lon" 
-          keyboardType='numeric'
-        />
+        <AppInput style={{flex:1}} value={lat} onChangeText={setLat} placeholder="Lat" keyboardType='numeric'/>
+        <AppInput style={{flex:1}} value={lon} onChangeText={setLon} placeholder="Lon" keyboardType='numeric'/>
       </View>
 
       <Text style={styles.statusText}>{bleStatus}</Text>
       
       <AppButton 
         title={isScanning ? 'RECHERCHE...' : 'ENVOYER CONFIG'}
-        onPress={() => onConnect(ssid, password, lat, lon)}
+        onPress={() => onConnect(ssid, password, lat, lon, ip)}
         isLoading={isScanning}
       />
     </Card>
