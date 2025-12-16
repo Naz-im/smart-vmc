@@ -7,9 +7,11 @@ import { useWindowApi } from './hooks/useWindowApi';
 import TabHeader from './components/TabHeader';
 import SetupPanel from './components/SetupPanel';
 import DashboardPanel from './components/DashboardPanel';
+import ConfigurationPanel from './components/ConfigurationPanel';
 
 function App(): React.JSX.Element {
-  const [tab, setTab] = useState<'SETUP' | 'DASHBOARD'>('SETUP');
+  
+  const [tab, setTab] = useState<'SETUP' | 'DASHBOARD' | 'CONFIGURATION'>('SETUP');
   const [serverIp, setServerIp] = useState('192.168.1.50');
   
   const [isAutoConnecting, setIsAutoConnecting] = useState(false);
@@ -65,27 +67,11 @@ function App(): React.JSX.Element {
     });
   };
 
-  const handleAutoDetect = () => {
-      scanAndGetIp((detectedIp) => {
-          if (detectedIp && detectedIp !== "0.0.0.0") {
-            handleIpChange(detectedIp);
-            Alert.alert("Succès", `IP détectée : ${detectedIp}`);
-          }
-      });
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007A5E" />
       <TabHeader activeTab={tab} onTabChange={setTab} />
       
-      {isAutoConnecting && (
-        <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color="#fff" />
-            <Text style={styles.loadingText}>Redémarrage de l'ESP32...</Text>
-            <Text style={styles.loadingSubText}>Récupération de l'IP en cours</Text>
-        </View>
-      )}
 
       <ScrollView contentContainerStyle={styles.content}>
         {tab === 'SETUP' && (
@@ -94,16 +80,21 @@ function App(): React.JSX.Element {
                 isScanning={isScanning || isAutoConnecting}
                 onConnect={handleConnect}
                 savedIp={serverIp}
-                onAutoDetect={handleAutoDetect}
             />
         )}
+
         {tab === 'DASHBOARD' && (
             <DashboardPanel 
                 windowState={windowState}
-                onRefresh={fetchStatus}
                 onToggleAuto={toggleAutoMode}
                 onCommand={sendCommand}
                 onAngleChange={sendAngle}
+            />
+        )}
+
+        {tab === 'CONFIGURATION' && (
+            <ConfigurationPanel 
+                windowState={windowState}
                 onUpdateThresholds={updateThresholds}
                 isLoading={isLoading}
             />

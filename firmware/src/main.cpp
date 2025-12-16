@@ -26,7 +26,6 @@ float longitude = 5.72;
 float tempMax = 30.0;
 float tempMin = 18.0;
 int aqiMax = 50;
-int aqiMin = 20;
 
 bool isOpen = false;
 bool autoMode = true;
@@ -61,7 +60,6 @@ void handleStatus() {
     doc["tMax"] = tempMax; 
     doc["tMin"] = tempMin; 
     doc["aqiMax"] = aqiMax; 
-    doc["aqiMin"] = aqiMin; 
     
     String response;
     serializeJson(doc, response);
@@ -128,11 +126,6 @@ void handleControl() {
         preferences.putInt("aqmax", aqiMax);
         thresholdsUpdated = true;
     }
-    if (doc.containsKey("aqiMin")) {
-        aqiMin = doc["aqiMin"].as<int>();
-        preferences.putInt("aqmin", aqiMin);
-        thresholdsUpdated = true;
-    }
 
     preferences.end();
     
@@ -152,7 +145,6 @@ void handleControl() {
     state["tMax"] = tempMax; 
     state["tMin"] = tempMin; 
     state["aqiMax"] = aqiMax; 
-    state["aqiMin"] = aqiMin; 
 
     String response;
     serializeJson(resDoc, response);
@@ -204,7 +196,6 @@ void setup() {
     tempMax = preferences.getFloat("tmax", 30.0);
     tempMin = preferences.getFloat("tmin", 18.0);
     aqiMax = preferences.getInt("aqmax", 50);
-    aqiMin = preferences.getInt("aqmin", 20);
     preferences.end();
 
     if (wifi_ssid != "") {
@@ -260,24 +251,25 @@ void loop() {
                 JsonDocument doc; deserializeJson(doc, payload);
                 lastTemp = doc["current"]["temperature_2m"];
                 lastAQI = doc["current"]["european_aqi"];
+                Serial.println("🌡 Température: " + String(lastTemp) + " °C, AQI: " + String(lastAQI));
                 if (doc["current"]["european_aqi"].isNull()) lastAQI = 20;
                 
                 if (autoMode) {
-                    if (lastTemp > tempMax) {
+                    if (lastTemp > tempMax || lastAQI > aqiMax)
+                    {
                         targetAngle = 0;
                         setWindow(0);
-                    } 
-                    else if (lastAQI > aqiMax) {
-                        targetAngle = 0;
-                        setWindow(0);
-                    } 
-                    else if (lastTemp > tempMin && lastAQI < aqiMin) {
+                        Serial.println("Fermeture");
+                    }
+                    else if (lastTemp > tempMin) {
                         targetAngle = 90;
                         setWindow(90);
+                        Serial.println("Ouverture");
                     }
                     else {
                         targetAngle = 0;
                         setWindow(0);
+                        Serial.println("Fermeture");
                     }
                 }
             }

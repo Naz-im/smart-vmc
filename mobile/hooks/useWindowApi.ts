@@ -91,7 +91,7 @@ export const useWindowApi = (serverIp: string) => {
     }
   }, [serverIp, fetchStatus]);
   
-  const updateThresholds = useCallback(async (tMax: number, tMin: number, aqiMax: number, aqiMin: number) => {
+  const updateThresholds = useCallback(async (tMax: number, tMin: number, aqiMax: number) => {
     if (!serverIp || serverIp === '0.0.0.0') return;
     setLoading(true);
     
@@ -99,7 +99,7 @@ export const useWindowApi = (serverIp: string) => {
         const response = await fetch(`http://${serverIp}:3001/api/window/control`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tMax, tMin, aqiMax, aqiMin }),
+            body: JSON.stringify({ tMax, tMin, aqiMax }),
         });
         
         if (response.ok) {

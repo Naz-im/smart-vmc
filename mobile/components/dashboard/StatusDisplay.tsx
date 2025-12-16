@@ -4,10 +4,9 @@ import { AppButton } from '../ui/AppButton';
 
 interface StatusDisplayProps {
   isOpen: boolean;
-  onRefresh: () => void;
 }
 
-export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen, onRefresh }) => {
+export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>
@@ -19,12 +18,6 @@ export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen, onRefresh 
       ]}>
         {isOpen ? 'OUVERTE' : 'FERMÉE'}
       </Text>
-      <AppButton
-        title="Actualiser l'état"
-        onPress={onRefresh}
-        variant="secondary"
-        style={styles.refreshButton}
-      />
     </View>
   );
 };

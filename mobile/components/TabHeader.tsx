@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 interface TabHeaderProps {
-  activeTab: 'SETUP' | 'DASHBOARD';
-  onTabChange: (tab: 'SETUP' | 'DASHBOARD') => void;
+  activeTab: 'SETUP' | 'DASHBOARD' | 'CONFIGURATION';
+  onTabChange: (tab: 'SETUP' | 'DASHBOARD' | 'CONFIGURATION') => void;
 }
 
 const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
@@ -15,13 +15,19 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
           onPress={() => onTabChange('SETUP')} 
           style={[styles.tab, activeTab === 'SETUP' && styles.activeTab]}
         >
-          <Text style={styles.tabText}>📡 Setup</Text>
+          <Text style={styles.tabText}>📡 Wifi Setup</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           onPress={() => onTabChange('DASHBOARD')} 
           style={[styles.tab, activeTab === 'DASHBOARD' && styles.activeTab]}
         >
           <Text style={styles.tabText}>📊 Contrôle</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          onPress={() => onTabChange('CONFIGURATION')} 
+          style={[styles.tab, activeTab === 'CONFIGURATION' && styles.activeTab]}
+        >
+          <Text style={styles.tabText}>⚙️ Réglages</Text>
         </TouchableOpacity>
       </View>
     </View>

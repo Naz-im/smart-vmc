@@ -10,7 +10,6 @@ interface SetupPanelProps {
   // Simplification de la signature
   onConnect: (ssid: string, pass: string, lat: string, lon: string, ip: string) => void;
   savedIp: string;
-  onAutoDetect: () => void;
 }
 
 const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnect, savedIp }) => {
@@ -28,16 +27,6 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
   return (
     <Card>
       <Text style={styles.sectionTitle}>Configuration</Text>
-      
-      <Text style={{fontWeight:'bold', marginTop:10}}>Adresse IP de l'ESP32</Text>
-      <AppInput 
-        value={ip} 
-        onChangeText={setIp} 
-        placeholder="0.0.0.0 (Trouvée automatiquement après config)" 
-        keyboardType='numeric'
-        editable={!isScanning}
-      />
-      <View style={{height: 15}} />
 
       <Text style={{fontWeight:'bold', marginTop:10}}>WiFi & Localisation</Text>
       <AppInput value={ssid} onChangeText={setSsid} placeholder="SSID WiFi" autoCapitalize='none' editable={!isScanning}/>
