@@ -23,6 +23,11 @@ String wifi_pass = "";
 float latitude = 45.18;
 float longitude = 5.72;
 
+float tempMax = 30.0;
+float tempMin = 18.0;
+int aqiMax = 50;
+int aqiMin = 20;
+
 bool isOpen = false;
 bool autoMode = true;
 int targetAngle = 0;
@@ -53,6 +58,10 @@ void handleStatus() {
     doc["aqi"] = lastAQI;
     doc["targetAngle"] = targetAngle;
     doc["autoMode"] = autoMode;
+    doc["tMax"] = tempMax; 
+    doc["tMin"] = tempMin; 
+    doc["aqiMax"] = aqiMax; 
+    doc["aqiMin"] = aqiMin; 
     
     String response;
     serializeJson(doc, response);
@@ -82,6 +91,8 @@ void handleControl() {
         server.send(400, "application/json", "{\"error\":\"Invalid JSON\"}");
         return;
     }
+    
+    bool thresholdsUpdated = false;
 
     if (doc.containsKey("autoMode")) {
         autoMode = doc["autoMode"];
@@ -99,6 +110,35 @@ void handleControl() {
         if (action == "close") targetAngle = 0;
         setWindow(targetAngle);
     }
+    
+    preferences.begin("config", false);
+
+    if (doc.containsKey("tMax")) {
+        tempMax = doc["tMax"].as<float>();
+        preferences.putFloat("tmax", tempMax);
+        thresholdsUpdated = true;
+    }
+    if (doc.containsKey("tMin")) {
+        tempMin = doc["tMin"].as<float>();
+        preferences.putFloat("tmin", tempMin);
+        thresholdsUpdated = true;
+    }
+    if (doc.containsKey("aqiMax")) {
+        aqiMax = doc["aqiMax"].as<int>();
+        preferences.putInt("aqmax", aqiMax);
+        thresholdsUpdated = true;
+    }
+    if (doc.containsKey("aqiMin")) {
+        aqiMin = doc["aqiMin"].as<int>();
+        preferences.putInt("aqmin", aqiMin);
+        thresholdsUpdated = true;
+    }
+
+    preferences.end();
+    
+    if (thresholdsUpdated && autoMode) {
+        lastWeatherCheck = 0;
+    }
 
     JsonDocument resDoc;
     resDoc["success"] = true;
@@ -109,6 +149,10 @@ void handleControl() {
     state["aqi"] = lastAQI;
     state["targetAngle"] = targetAngle;
     state["autoMode"] = autoMode;
+    state["tMax"] = tempMax; 
+    state["tMin"] = tempMin; 
+    state["aqiMax"] = aqiMax; 
+    state["aqiMin"] = aqiMin; 
 
     String response;
     serializeJson(resDoc, response);
@@ -123,21 +167,33 @@ class ConfigCallbacks : public BLECharacteristicCallbacks {
             int s1 = data.indexOf(';');
             int s2 = data.indexOf(';', s1 + 1);
             int s3 = data.indexOf(';', s2 + 1);
+            int s4 = data.indexOf(';', s3 + 1);
+            int s5 = data.indexOf(';', s4 + 1);
+            int s6 = data.indexOf(';', s5 + 1);
+            int s7 = data.indexOf(';', s6 + 1);
             
-            if (s3 > 0) {
+            if (s7 > 0) {
                 wifi_ssid = data.substring(0, s1);
                 wifi_pass = data.substring(s1 + 1, s2);
                 latitude = data.substring(s2 + 1, s3).toFloat();
+                longitude = data.substring(s3 + 1, s4).toFloat();
                 
-                int s4 = data.indexOf(';', s3 + 1);
-                if (s4 > 0) longitude = data.substring(s3 + 1, s4).toFloat();
-                else longitude = data.substring(s3 + 1).toFloat();
+                tempMax = data.substring(s4 + 1, s5).toFloat();
+                tempMin = data.substring(s5 + 1, s6).toFloat();
+                aqiMax = data.substring(s6 + 1, s7).toInt();
+                aqiMin = data.substring(s7 + 1).toInt();
 
                 preferences.begin("config", false);
                 preferences.putString("ssid", wifi_ssid);
                 preferences.putString("pass", wifi_pass);
                 preferences.putFloat("lat", latitude);
                 preferences.putFloat("lon", longitude);
+                
+                preferences.putFloat("tmax", tempMax);
+                preferences.putFloat("tmin", tempMin);
+                preferences.putInt("aqmax", aqiMax);
+                preferences.putInt("aqmin", aqiMin);
+
                 preferences.end();
                 ESP.restart();
             }
@@ -155,6 +211,10 @@ void setup() {
     wifi_pass = preferences.getString("pass", "");
     latitude = preferences.getFloat("lat", 45.18);
     longitude = preferences.getFloat("lon", 5.72);
+    tempMax = preferences.getFloat("tmax", 30.0);
+    tempMin = preferences.getFloat("tmin", 18.0);
+    aqiMax = preferences.getInt("aqmax", 50);
+    aqiMin = preferences.getInt("aqmin", 20);
     preferences.end();
 
     if (wifi_ssid != "") {
@@ -169,13 +229,12 @@ void setup() {
         if (WiFi.status() == WL_CONNECTED) {
             Serial.println("\n✅ WiFi Connecté ! IP: " + WiFi.localIP().toString());
             
-            // Démarrage Serveur Web
             server.on("/api/window/status", HTTP_GET, handleStatus);
             server.on("/api/window/control", HTTP_POST, handleControl);
             server.onNotFound([]() { server.send(404, "text/plain", "Not Found"); });
             server.begin();
         } else {
-            Serial.println("\n❌ Échec WiFi (Mauvais MDP ?)");
+            Serial.println("\n❌ Échec WiFi");
         }
     }
 
@@ -197,7 +256,9 @@ void setup() {
 }
 
 void loop() {
-    server.handleClient();
+    if (WiFi.status() == WL_CONNECTED) {
+        server.handleClient();
+    }
 
     if (millis() - lastWeatherCheck > 60000 || lastWeatherCheck == 0) {
         if (WiFi.status() == WL_CONNECTED) {
@@ -212,8 +273,22 @@ void loop() {
                 if (doc["current"]["european_aqi"].isNull()) lastAQI = 20;
                 
                 if (autoMode) {
-                    if (lastTemp > 30.0 || lastAQI > 50) setWindow(0);
-                    else setWindow(90);
+                    if (lastTemp > tempMax) {
+                        targetAngle = 0;
+                        setWindow(0);
+                    } 
+                    else if (lastAQI > aqiMax) {
+                        targetAngle = 0;
+                        setWindow(0);
+                    } 
+                    else if (lastTemp > tempMin && lastAQI < aqiMin) {
+                        targetAngle = 90;
+                        setWindow(90);
+                    }
+                    else {
+                        targetAngle = 0;
+                        setWindow(0);
+                    }
                 }
             }
             http.end();

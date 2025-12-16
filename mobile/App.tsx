@@ -26,15 +26,25 @@ function App(): React.JSX.Element {
   };
 
   const { bleStatus, isScanning, scanAndConfigure, scanAndGetIp } = useBLE();
-  const { windowState, fetchStatus, sendCommand, sendAngle, toggleAutoMode } = useWindowApi(serverIp);
+  const { windowState, fetchStatus, sendCommand, sendAngle, toggleAutoMode, updateThresholds, isLoading } = useWindowApi(serverIp);
 
   useEffect(() => { 
     if (tab === 'DASHBOARD') fetchStatus();
   }, [tab, fetchStatus]);
 
-  const handleConnect = (ssid: string, pass: string, lat: string, lon: string, ip: string) => {
+  const handleConnect = (
+    ssid: string, 
+    pass: string, 
+    lat: string, 
+    lon: string, 
+    ip: string,
+    tMax: string,
+    tMin: string,
+    aqiMax: string,
+    aqiMin: string
+  ) => {
     
-    scanAndConfigure(ssid, pass, lat, lon, ip, () => {
+    scanAndConfigure(ssid, pass, lat, lon, ip, tMax, tMin, aqiMax, aqiMin, () => {
         
         setIsAutoConnecting(true);
         
@@ -57,12 +67,20 @@ function App(): React.JSX.Element {
     });
   };
 
+  const handleAutoDetect = () => {
+      scanAndGetIp((detectedIp) => {
+          if (detectedIp && detectedIp !== "0.0.0.0") {
+            handleIpChange(detectedIp);
+            Alert.alert("Succès", `IP détectée : ${detectedIp}`);
+          }
+      });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007A5E" />
       <TabHeader activeTab={tab} onTabChange={setTab} />
       
-      {}
       {isAutoConnecting && (
         <View style={styles.loadingOverlay}>
             <ActivityIndicator size="large" color="#fff" />
@@ -78,6 +96,7 @@ function App(): React.JSX.Element {
                 isScanning={isScanning || isAutoConnecting}
                 onConnect={handleConnect}
                 savedIp={serverIp}
+                onAutoDetect={handleAutoDetect}
             />
         )}
         {tab === 'DASHBOARD' && (
@@ -87,6 +106,8 @@ function App(): React.JSX.Element {
                 onToggleAuto={toggleAutoMode}
                 onCommand={sendCommand}
                 onAngleChange={sendAngle}
+                onUpdateThresholds={updateThresholds}
+                isLoading={isLoading}
             />
         )}
       </ScrollView>

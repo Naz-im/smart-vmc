@@ -23,7 +23,18 @@ export const useBLE = () => {
     return () => { bleManager.destroy(); };
   }, [bleManager]);
 
-  const scanAndConfigure = (ssid: string, pass: string, lat: string, lon: string, ip: string, onSuccess: () => void) => {
+  const scanAndConfigure = (
+    ssid: string, 
+    pass: string, 
+    lat: string, 
+    lon: string, 
+    ip: string,
+    tMax: string,
+    tMin: string,
+    aqiMax: string,
+    aqiMin: string,
+    onSuccess: () => void
+  ) => {
     if (isScanning) return;
     setIsScanning(true);
     setBleStatus('Recherche ESP32...');
@@ -49,12 +60,12 @@ export const useBLE = () => {
           .then((d) => d.discoverAllServicesAndCharacteristics())
           .then((d) => {
             setBleStatus('Envoi Config...');
-            const configStr = `${ssid};${pass};${lat};${lon}`;
+            const configStr = `${ssid};${pass};${lat};${lon};${tMax};${tMin};${aqiMax};${aqiMin}`;
             return d.writeCharacteristicWithResponseForService(SERVICE_UUID, CHAR_UUID, encode(configStr))
                 .then(() => d);
           })
           .then(async (d) => {
-            setBleStatus('Config envoyée !');
+            setBleStatus('Config envoyée ! ✅');
             setIsScanning(false);
             Alert.alert("Succès", "L'ESP32 redémarre...");
             setTimeout(onSuccess, 1000);
