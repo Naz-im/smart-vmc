@@ -7,7 +7,8 @@ import { AppButton } from './ui/AppButton';
 interface SetupPanelProps {
   bleStatus: string;
   isScanning: boolean;
-  onConnect: (ssid: string, pass: string, lat: string, lon: string, ip: string, tMax: string, tMin: string, aqiMax: string, aqiMin: string) => void;
+  // Simplification de la signature
+  onConnect: (ssid: string, pass: string, lat: string, lon: string, ip: string) => void;
   savedIp: string;
   onAutoDetect: () => void;
 }
@@ -18,10 +19,7 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
   const [lat, setLat] = useState('45.188');
   const [lon, setLon] = useState('5.724');
   const [ip, setIp] = useState(savedIp);
-  const [tMax, setTMax] = useState('30');
-  const [tMin, setTMin] = useState('18');
-  const [aqiMax, setAqiMax] = useState('50');
-  const [aqiMin, setAqiMin] = useState('20');
+  // Suppression des states des seuils
 
   useEffect(() => {
     setIp(savedIp);
@@ -50,22 +48,14 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
         <AppInput style={{flex:1}} value={lon} onChangeText={setLon} placeholder="Lon" keyboardType='numeric' editable={!isScanning}/>
       </View>
       
-      <Text style={{fontWeight:'bold', marginTop:10}}>Seuils Automatiques (Défaut)</Text>
-      <View style={{flexDirection:'row', gap:10}}>
-          <AppInput style={{flex:1}} value={tMax} onChangeText={setTMax} placeholder="T° Max (fermeture)" keyboardType='numeric' editable={!isScanning}/>
-          <AppInput style={{flex:1}} value={tMin} onChangeText={setTMin} placeholder="T° Min (ouverture)" keyboardType='numeric' editable={!isScanning}/>
-      </View>
-      <View style={{flexDirection:'row', gap:10}}>
-          <AppInput style={{flex:1}} value={aqiMax} onChangeText={setAqiMax} placeholder="AQI Max (fermeture)" keyboardType='numeric' editable={!isScanning}/>
-          <AppInput style={{flex:1}} value={aqiMin} onChangeText={setAqiMin} placeholder="AQI Min (ouverture)" keyboardType='numeric' editable={!isScanning}/>
-      </View>
-
+      {/* Suppression de la section Seuils Automatiques */}
 
       <Text style={styles.statusText}>{bleStatus}</Text>
       
       <AppButton 
         title={isScanning ? 'ENVOI EN COURS...' : 'ENVOYER CONFIG'}
-        onPress={() => onConnect(ssid, password, lat, lon, ip, tMax, tMin, aqiMax, aqiMin)}
+        // Simplification de l'appel
+        onPress={() => onConnect(ssid, password, lat, lon, ip)}
         isLoading={isScanning}
       />
     </Card>

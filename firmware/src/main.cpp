@@ -167,33 +167,22 @@ class ConfigCallbacks : public BLECharacteristicCallbacks {
             int s1 = data.indexOf(';');
             int s2 = data.indexOf(';', s1 + 1);
             int s3 = data.indexOf(';', s2 + 1);
-            int s4 = data.indexOf(';', s3 + 1);
-            int s5 = data.indexOf(';', s4 + 1);
-            int s6 = data.indexOf(';', s5 + 1);
-            int s7 = data.indexOf(';', s6 + 1);
             
-            if (s7 > 0) {
+            // On vérifie qu'on a les 4 champs fondamentaux
+            if (s3 > 0) {
                 wifi_ssid = data.substring(0, s1);
                 wifi_pass = data.substring(s1 + 1, s2);
                 latitude = data.substring(s2 + 1, s3).toFloat();
-                longitude = data.substring(s3 + 1, s4).toFloat();
+                longitude = data.substring(s3 + 1).toFloat();
                 
-                tempMax = data.substring(s4 + 1, s5).toFloat();
-                tempMin = data.substring(s5 + 1, s6).toFloat();
-                aqiMax = data.substring(s6 + 1, s7).toInt();
-                aqiMin = data.substring(s7 + 1).toInt();
-
                 preferences.begin("config", false);
                 preferences.putString("ssid", wifi_ssid);
                 preferences.putString("pass", wifi_pass);
                 preferences.putFloat("lat", latitude);
                 preferences.putFloat("lon", longitude);
                 
-                preferences.putFloat("tmax", tempMax);
-                preferences.putFloat("tmin", tempMin);
-                preferences.putInt("aqmax", aqiMax);
-                preferences.putInt("aqmin", aqiMin);
-
+                // Les seuils ne sont PAS modifiés ici, ils gardent leur valeur par défaut ou NVS.
+                
                 preferences.end();
                 ESP.restart();
             }
@@ -211,6 +200,7 @@ void setup() {
     wifi_pass = preferences.getString("pass", "");
     latitude = preferences.getFloat("lat", 45.18);
     longitude = preferences.getFloat("lon", 5.72);
+    // On charge les seuils s'ils existent, sinon on garde les valeurs par défaut
     tempMax = preferences.getFloat("tmax", 30.0);
     tempMin = preferences.getFloat("tmin", 18.0);
     aqiMax = preferences.getInt("aqmax", 50);

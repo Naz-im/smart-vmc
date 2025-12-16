@@ -29,11 +29,7 @@ export const useBLE = () => {
     lat: string, 
     lon: string, 
     ip: string,
-    tMax: string,
-    tMin: string,
-    aqiMax: string,
-    aqiMin: string,
-    onSuccess: () => void
+    onSuccess: () => void 
   ) => {
     if (isScanning) return;
     setIsScanning(true);
@@ -60,7 +56,8 @@ export const useBLE = () => {
           .then((d) => d.discoverAllServicesAndCharacteristics())
           .then((d) => {
             setBleStatus('Envoi Config...');
-            const configStr = `${ssid};${pass};${lat};${lon};${tMax};${tMin};${aqiMax};${aqiMin}`;
+            // Envoi des 4 paramètres fondamentaux seulement
+            const configStr = `${ssid};${pass};${lat};${lon}`;
             return d.writeCharacteristicWithResponseForService(SERVICE_UUID, CHAR_UUID, encode(configStr))
                 .then(() => d);
           })

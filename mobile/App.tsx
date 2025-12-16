@@ -37,14 +37,12 @@ function App(): React.JSX.Element {
     pass: string, 
     lat: string, 
     lon: string, 
-    ip: string,
-    tMax: string,
-    tMin: string,
-    aqiMax: string,
-    aqiMin: string
+    ip: string
+    // Suppression des paramètres de seuils
   ) => {
     
-    scanAndConfigure(ssid, pass, lat, lon, ip, tMax, tMin, aqiMax, aqiMin, () => {
+    // Simplification de l'appel à scanAndConfigure
+    scanAndConfigure(ssid, pass, lat, lon, ip, () => {
         
         setIsAutoConnecting(true);
         
