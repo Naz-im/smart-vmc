@@ -57,15 +57,6 @@ function App(): React.JSX.Element {
     });
   };
 
-  const handleAutoDetect = () => {
-      scanAndGetIp((detectedIp) => {
-          if (detectedIp && detectedIp !== "0.0.0.0") {
-            handleIpChange(detectedIp);
-            Alert.alert("Succès", `IP détectée : ${detectedIp}`);
-          }
-      });
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007A5E" />
@@ -87,7 +78,6 @@ function App(): React.JSX.Element {
                 isScanning={isScanning || isAutoConnecting}
                 onConnect={handleConnect}
                 savedIp={serverIp}
-                onAutoDetect={handleAutoDetect}
             />
         )}
         {tab === 'DASHBOARD' && (

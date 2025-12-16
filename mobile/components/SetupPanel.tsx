@@ -9,10 +9,9 @@ interface SetupPanelProps {
   isScanning: boolean;
   onConnect: (ssid: string, pass: string, lat: string, lon: string, ip: string) => void;
   savedIp: string;
-  onAutoDetect: () => void;
 }
 
-const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnect, savedIp, onAutoDetect }) => {
+const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnect, savedIp }) => {
   const [ssid, setSsid] = useState('');
   const [password, setPassword] = useState('');
   const [lat, setLat] = useState('45.188');
@@ -26,24 +25,6 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
   return (
     <Card>
       <Text style={styles.sectionTitle}>Configuration</Text>
-      
-      <Text style={{fontWeight:'bold', marginTop:10}}>Adresse IP de l'ESP32</Text>
-      <View style={{flexDirection:'row', gap: 10, alignItems: 'center'}}>
-          <AppInput 
-            style={{flex: 1, marginBottom: 0}} 
-            value={ip} 
-            onChangeText={setIp} 
-            placeholder="0.0.0.0" 
-            keyboardType='numeric'
-          />
-          <AppButton 
-            title="🔍 AUTO" 
-            onPress={onAutoDetect} 
-            isLoading={isScanning}
-            style={{height: 50, paddingHorizontal: 15, marginBottom: 0}}
-          />
-      </View>
-      <View style={{height: 15}} />
 
       <Text style={{fontWeight:'bold', marginTop:10}}>WiFi & Localisation</Text>
       <AppInput value={ssid} onChangeText={setSsid} placeholder="SSID WiFi" autoCapitalize='none'/>
