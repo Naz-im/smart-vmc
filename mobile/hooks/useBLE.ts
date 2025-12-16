@@ -54,7 +54,7 @@ export const useBLE = () => {
                 .then(() => d);
           })
           .then(async (d) => {
-            setBleStatus('Config envoyée ! ✅');
+            setBleStatus('Config envoyée !');
             setIsScanning(false);
             Alert.alert("Succès", "L'ESP32 redémarre...");
             setTimeout(onSuccess, 1000);
