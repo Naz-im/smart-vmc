@@ -157,6 +157,28 @@ void setup() {
     longitude = preferences.getFloat("lon", 5.72);
     preferences.end();
 
+    if (wifi_ssid != "") {
+        WiFi.begin(wifi_ssid.c_str(), wifi_pass.c_str());
+        Serial.print("Connexion WiFi...");
+        int tries = 0;
+        while (WiFi.status() != WL_CONNECTED && tries < 30) {
+            delay(500); 
+            Serial.print("."); 
+            tries++;
+        }
+        if (WiFi.status() == WL_CONNECTED) {
+            Serial.println("\n✅ WiFi Connecté ! IP: " + WiFi.localIP().toString());
+            
+            // Démarrage Serveur Web
+            server.on("/api/window/status", HTTP_GET, handleStatus);
+            server.on("/api/window/control", HTTP_POST, handleControl);
+            server.onNotFound([]() { server.send(404, "text/plain", "Not Found"); });
+            server.begin();
+        } else {
+            Serial.println("\n❌ Échec WiFi (Mauvais MDP ?)");
+        }
+    }
+
     BLEDevice::init("ESP32_SmartWindow");
     BLEServer *pServer = BLEDevice::createServer();
     BLEService *pService = pServer->createService(SERVICE_UUID);
@@ -165,28 +187,13 @@ void setup() {
     pChar->setCallbacks(new ConfigCallbacks());
     
     pIpChar = pService->createCharacteristic(CHAR_IP_UUID, NIMBLE_PROPERTY::READ);
-    pIpChar->setValue("0.0.0.0");
+    
+    String currentIp = (WiFi.status() == WL_CONNECTED) ? WiFi.localIP().toString() : "0.0.0.0";
+    pIpChar->setValue(std::string(currentIp.c_str())); 
 
     pService->start();
     BLEDevice::getAdvertising()->addServiceUUID(SERVICE_UUID);
     BLEDevice::getAdvertising()->start();
-
-    if (wifi_ssid != "") {
-        WiFi.begin(wifi_ssid.c_str(), wifi_pass.c_str());
-        int tries = 0;
-        while (WiFi.status() != WL_CONNECTED && tries < 20) {
-            delay(500); tries++;
-        }
-        if (WiFi.status() == WL_CONNECTED) {
-            String ip = WiFi.localIP().toString();
-            pIpChar->setValue(std::string(ip.c_str())); 
-
-            server.on("/api/window/status", HTTP_GET, handleStatus);
-            server.on("/api/window/control", HTTP_POST, handleControl);
-            server.onNotFound([]() { server.send(404, "text/plain", "Not Found"); });
-            server.begin();
-        }
-    }
 }
 
 void loop() {
@@ -205,13 +212,8 @@ void loop() {
                 if (doc["current"]["european_aqi"].isNull()) lastAQI = 20;
                 
                 if (autoMode) {
-                    if (lastTemp > 30.0 || lastAQI > 50) {
-                        targetAngle = 0;
-                        setWindow(0);
-                    } else {
-                        targetAngle = 90;
-                        setWindow(90);
-                    }
+                    if (lastTemp > 30.0 || lastAQI > 50) setWindow(0);
+                    else setWindow(90);
                 }
             }
             http.end();
