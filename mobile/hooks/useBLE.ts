@@ -64,6 +64,7 @@ export const useBLE = () => {
              setBleStatus('Erreur écriture: ' + err.message);
              setIsScanning(false);
              if (device) await device.cancelConnection();
+          });
       }
     });
   };
