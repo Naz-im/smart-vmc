@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 interface SensorRowProps {
-  temp?: number;
-  aqi?: number;
+  temp: number;
+  aqi: number;
 }
 
 export const SensorRow: React.FC<SensorRowProps> = ({ temp, aqi }) => {
   return (
     <View style={styles.row}>
-      <Text style={styles.value}>🌡️ {temp ?? '--'}°C</Text>
+      <Text style={styles.value}>🌡️ {temp !== undefined && temp !== null ? temp.toFixed(1) : '--'}°C</Text>
       <Text style={styles.value}>🏭 AQI {aqi ?? '--'}</Text>
     </View>
   );

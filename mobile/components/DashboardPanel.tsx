@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Card } from './ui/Card';
-// ATTENTION: Changement des imports de default (sans {}) à named (avec {})
 import { StatusDisplay } from './dashboard/StatusDisplay'; 
-import { SensorRow } from './dashboard/SensorRow';
-import { ControlPanel } from './dashboard/ControlPanel';
+import { SensorRow } from './dashboard/SensorRow'; 
+import { ControlPanel } from './dashboard/ControlPanel'; 
 import { WindowApiState } from '../hooks/useWindowApi';
 import { AppInput } from './ui/AppInput';
 import { AppButton } from './ui/AppButton';
@@ -58,8 +57,13 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
   return (
     <View>
       
-      <StatusDisplay windowState={windowState} onRefresh={onRefresh} />
+      {}
+      <StatusDisplay isOpen={windowState.isOpen} onRefresh={onRefresh} />
       
+      {}
+      <SensorRow temp={windowState.temp} aqi={windowState.aqi} />
+
+      {}
       <Card style={{marginBottom: 20}}>
           <Text style={styles.cardTitle}>Configuration Auto</Text>
           <Text style={{fontWeight:'bold', marginTop:10}}>Seuils de Température (°C)</Text>
@@ -110,10 +114,10 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
           />
       </Card>
 
-      <SensorRow title="Température Actuelle" value={windowState.temp} unit="°C" icon="thermometer" />
-      <SensorRow title="Qualité Air (AQI)" value={windowState.aqi} unit="" icon="air-filter" />
+      {}
       <ControlPanel 
-          windowState={windowState}
+          isAuto={windowState.autoMode}
+          targetAngle={windowState.targetAngle}
           onToggleAuto={onToggleAuto}
           onCommand={onCommand}
           onAngleChange={onAngleChange}

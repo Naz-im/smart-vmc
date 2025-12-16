@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { AppButton } from '../ui/AppButton';
 
 interface StatusDisplayProps {
   isOpen: boolean;
+  onRefresh: () => void;
 }
 
-export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen }) => {
+export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen, onRefresh }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>
@@ -17,6 +19,12 @@ export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen }) => {
       ]}>
         {isOpen ? 'OUVERTE' : 'FERMÉE'}
       </Text>
+      <AppButton
+        title="Actualiser l'état"
+        onPress={onRefresh}
+        variant="secondary"
+        style={styles.refreshButton}
+      />
     </View>
   );
 };
@@ -35,4 +43,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.5,
   },
+  refreshButton: {
+    marginTop: 15,
+  }
 });
