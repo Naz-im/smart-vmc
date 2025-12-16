@@ -30,12 +30,10 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
 
 const styles = StyleSheet.create({
   header: {
-    // Vert "ENSIMAG" (profond et professionnel)
     backgroundColor: '#007A5E', 
-    paddingTop: 50, // Plus d'espace pour la barre d'état (encoche)
+    paddingTop: 50, 
     paddingBottom: 10,
     alignItems: 'center',
-    // Ombre portée douce pour donner du relief (iOS & Android)
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -46,13 +44,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     color: '#FFFFFF',
     fontSize: 24,
-    fontWeight: '700', // Un gras un peu moins lourd que 'bold'
-    letterSpacing: 0.8, // Espacement léger pour la modernité
+    fontWeight: '700',
+    letterSpacing: 0.8,
     marginBottom: 20,
   },
   tabs: {
     flexDirection: 'row',
-    width: '90%', // Les onglets ne collent pas aux bords
+    width: '90%',
     justifyContent: 'space-between',
     paddingBottom: 5,
   },
@@ -60,19 +58,18 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     alignItems: 'center',
-    borderRadius: 20, // Onglets en forme de pilule si activés
+    borderRadius: 20,
   },
   activeTab: {
-    // Fond blanc translucide pour l'onglet actif (style "glassmorphism")
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   tabText: {
-    color: '#FFF', // Blanc un peu transparent par défaut
+    color: '#FFF',
     fontSize: 15,
     fontWeight: '600',
   },
   activeTabText: {
-    color: '#FFFFFF', // Blanc pur pour l'actif
+    color: '#FFFFFF',
     fontWeight: 'bold',
   }
 });

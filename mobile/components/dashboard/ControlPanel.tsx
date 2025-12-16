@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { AppButton } from '../ui/AppButton'; // Ton bouton générique
+import { AppButton } from '../ui/AppButton';
 
 interface ControlPanelProps {
   isAuto: boolean;

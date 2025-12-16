@@ -19,7 +19,6 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
   const [lon, setLon] = useState('5.724');
   const [ip, setIp] = useState(savedIp);
 
-  // AJOUT ICI : On met à jour le champ si l'IP sauvegardée change (ex: après auto-détection)
   useEffect(() => {
     setIp(savedIp);
   }, [savedIp]);

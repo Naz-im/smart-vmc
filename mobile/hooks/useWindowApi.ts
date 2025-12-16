@@ -15,7 +15,7 @@ export const useWindowApi = (serverIp: string) => {
   const getBaseUrl = () => `http://${serverIp}:3001`;
 
   const fetchStatus = useCallback(async () => {
-    if (!serverIp) return; // Sécurité si pas d'IP
+    if (!serverIp) return;
     try {
       const res = await fetch(`${getBaseUrl()}/api/window/status`);
       const data = await res.json();
