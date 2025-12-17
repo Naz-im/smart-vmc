@@ -12,7 +12,7 @@ import ConfigurationPanel from './components/ConfigurationPanel';
 function App(): React.JSX.Element {
   
   const [tab, setTab] = useState<'SETUP' | 'DASHBOARD' | 'CONFIGURATION'>('SETUP');
-  const [serverIp, setServerIp] = useState('192.168.1.50');
+  const [serverIp, setServerIp] = useState('0.0.0.0');
   
   const [isAutoConnecting, setIsAutoConnecting] = useState(false);
 
@@ -39,12 +39,9 @@ function App(): React.JSX.Element {
     pass: string, 
     lat: string, 
     lon: string, 
-    ip: string
-    // Suppression des paramètres de seuils
   ) => {
-    
     // Simplification de l'appel à scanAndConfigure
-    scanAndConfigure(ssid, pass, lat, lon, ip, () => {
+    scanAndConfigure(ssid, pass, lat, lon, () => {
         
         setIsAutoConnecting(true);
         

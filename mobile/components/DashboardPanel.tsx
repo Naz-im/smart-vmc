@@ -41,10 +41,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
             onAngleChange={onAngleChange}
         />
         
-        {/* Le bouton Actualiser si tu veux le garder ici ou le mettre dans la TopBar */}
       </Card>
-
-      {/* LA CARD DE CONFIGURATION A DISPARU D'ICI 🎉 */}
     </View>
   );
 };

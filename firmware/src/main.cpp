@@ -37,6 +37,8 @@ unsigned long lastWeatherCheck = 0;
 
 int currentAngle = -1;
 
+bool shouldRestart = false;
+
 void setWindow(int angle) {
     if (angle < 0) angle = 0;
     if (angle > 90) angle = 90;
@@ -176,7 +178,8 @@ class ConfigCallbacks : public BLECharacteristicCallbacks {
                 // Les seuils ne sont PAS modifiés ici, ils gardent leur valeur par défaut ou NVS.
                 
                 preferences.end();
-                ESP.restart();
+                Serial.println("Configuration reçue via BLE. Redémarrage imminent...");
+                shouldRestart = true;
             }
         }
     }
@@ -237,6 +240,11 @@ void setup() {
 }
 
 void loop() {
+    if (shouldRestart)
+    {
+        delay(1000);
+        ESP.restart();
+    }
     if (WiFi.status() == WL_CONNECTED) {
         server.handleClient();
     }

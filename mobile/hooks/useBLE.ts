@@ -1,14 +1,15 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { PermissionsAndroid, Platform, Alert } from 'react-native';
-import { BleManager, Device } from 'react-native-ble-plx';
+import { BleManager } from 'react-native-ble-plx';
 import { encode, decode } from 'base-64';
 
 const SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
 const CHAR_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 const CHAR_IP_UUID = "12345678-1234-1234-1234-1234567890ab";
 
+const bleManager = new BleManager();
+
 export const useBLE = () => {
-  const bleManager = useMemo(() => new BleManager(), []);
   const [bleStatus, setBleStatus] = useState('En attente...');
   const [isScanning, setIsScanning] = useState(false);
 
@@ -20,15 +21,13 @@ export const useBLE = () => {
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
       ]);
     }
-    return () => { bleManager.destroy(); };
-  }, [bleManager]);
+  }, []);
 
   const scanAndConfigure = (
     ssid: string, 
     pass: string, 
     lat: string, 
     lon: string, 
-    ip: string,
     onSuccess: () => void 
   ) => {
     if (isScanning) return;
@@ -36,7 +35,11 @@ export const useBLE = () => {
     setBleStatus('Recherche ESP32...');
 
     const scanTimeout = setTimeout(() => { 
-        if (isScanning) { bleManager.stopDeviceScan(); setIsScanning(false); setBleStatus('Timeout'); } 
+        if (isScanning) { 
+            bleManager.stopDeviceScan(); 
+            setIsScanning(false); 
+            setBleStatus('Timeout'); 
+        } 
     }, 15000);
 
     bleManager.startDeviceScan(null, null, (error, device) => {
@@ -56,22 +59,35 @@ export const useBLE = () => {
           .then((d) => d.discoverAllServicesAndCharacteristics())
           .then((d) => {
             setBleStatus('Envoi Config...');
-            // Envoi des 4 paramètres fondamentaux seulement
             const configStr = `${ssid};${pass};${lat};${lon}`;
             return d.writeCharacteristicWithResponseForService(SERVICE_UUID, CHAR_UUID, encode(configStr))
                 .then(() => d);
           })
           .then(async (d) => {
             setBleStatus('Config envoyée ! ✅');
+
+            try {
+                await d.cancelConnection();
+                console.log('Connection closed cleanly');
+            } catch (e) {
+                console.log('Error closing connection (ignored):', e);
+            }
+
             setIsScanning(false);
-            Alert.alert("Succès", "L'ESP32 redémarre...");
-            setTimeout(onSuccess, 1000);
-            await d.cancelConnection();
+            
+            Alert.alert(
+                "Succès", 
+                "L'ESP32 redémarre...",
+                [{ text: "OK", onPress: onSuccess }]
+            );
           })
           .catch(async (err) => {
+             console.error(err);
              setBleStatus('Erreur écriture: ' + err.message);
              setIsScanning(false);
-             if (device) await device.cancelConnection();
+             if (device) {
+                 try { await device.cancelConnection(); } catch (e) {}
+             }
           });
       }
     });
