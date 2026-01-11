@@ -101,13 +101,21 @@ Notre projet consiste à réaliser un dispositif IoT permettant d'ajuster automa
 
 - Avoir **Node.js 18+** installé
 - Avoir **npm** installé
+- Avoir android studio installé
 
 ### Démarrer l’application mobile (uniquement sur Android)
 
+Dans un terminal:
 ```bash
 cd mobile
 npm install
-npx react-native run-android
+npm start
+```
+
+Dans un autre:
+```bash
+cd mobile
+npm run android
 ```
 
 ### Utilisation
@@ -121,26 +129,16 @@ npx react-native run-android
     - Cliquer sur les boutons « Ouvrir la fenêtre » ou « Fermer la fenêtre » (lorsque le mode automatique est désactivé)
 
 3. **Surveiller l’état** : Voir l’état actuel de la fenêtre (ouverte/fermée) et l’heure de la dernière mise à jour
-
-4. Glisser vers le bas pour actualiser manuellement les données
-5. Interface mobile native optimisée pour le tactile
+4. Interface mobile native optimisée pour le tactile
 
 #### Comprendre le mode automatique
 
 Lorsque le **mode automatique est ACTIVÉ** :
-- Le système contrôle automatiquement la fenêtre toutes les 30 secondes
+- Le système contrôle automatiquement la fenêtre
 - La fenêtre s’ouvre lorsque les conditions sont favorables (bonne qualité de l’air, vent modéré, bon ensoleillement)
 - La fenêtre se ferme lorsque les conditions sont défavorables (pollution élevée, vent fort)
 
 Lorsque le **mode automatique est DÉSACTIVÉ** :
 - Vous avez le contrôle manuel de la fenêtre
 - Cliquez sur « Ouvrir la fenêtre » ou « Fermer la fenêtre » pour la contrôler manuellement
-
-#### Dépannage
-
-###### L’application mobile ne peut pas se connecter
-
-- Sur les appareils physiques, mettez à jour API_URL dans mobile/App.tsx avec l’adresse IP de votre ordinateur
-- Assurez-vous que votre appareil mobile est sur le même réseau que votre ordinateur
-
-Vérifiez les paramètres du pare-feu sur votre ordinateur
+- Slider pour contrôler l'angle d'ouverture
