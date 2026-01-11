@@ -20,6 +20,8 @@ BLECharacteristic *pIpChar;
 
 String wifi_ssid = "";
 String wifi_pass = "";
+
+// Grenoble
 float latitude = 45.18;
 float longitude = 5.72;
 
@@ -39,7 +41,8 @@ int currentAngle = -1;
 
 bool shouldRestart = false;
 
-void setWindow(int angle) {
+// Change l'ouverture de la ventilation
+void setVMC(int angle) {
     if (angle < 0) angle = 0;
     if (angle > 90) angle = 90;
     
@@ -50,6 +53,7 @@ void setWindow(int angle) {
     isOpen = (angle > 0);
 }
 
+// Récupère le statut de la ventilation
 void handleStatus() {
     server.sendHeader("Access-Control-Allow-Origin", "*");
     
@@ -101,14 +105,14 @@ void handleControl() {
     if (doc.containsKey("angle")) {
         autoMode = false;
         targetAngle = doc["angle"];
-        setWindow(targetAngle);
+        setVMC(targetAngle);
     } 
     else if (doc.containsKey("action")) {
         autoMode = false;
         String action = doc["action"];
         if (action == "open") targetAngle = 90;
         if (action == "close") targetAngle = 0;
-        setWindow(targetAngle);
+        setVMC(targetAngle);
     }
     
     preferences.begin("config", false);
@@ -175,8 +179,6 @@ class ConfigCallbacks : public BLECharacteristicCallbacks {
                 preferences.putFloat("lat", latitude);
                 preferences.putFloat("lon", longitude);
                 
-                // Les seuils ne sont PAS modifiés ici, ils gardent leur valeur par défaut ou NVS.
-                
                 preferences.end();
                 Serial.println("Configuration reçue via BLE. Redémarrage imminent...");
                 shouldRestart = true;
@@ -185,6 +187,7 @@ class ConfigCallbacks : public BLECharacteristicCallbacks {
     }
 };
 
+// Initialisation de la connexion
 void setup() {
     Serial.begin(115200);
     windowServo.setPeriodHertz(50);
@@ -239,6 +242,7 @@ void setup() {
     BLEDevice::getAdvertising()->start();
 }
 
+// Boucle d'exécution principale
 void loop() {
     if (shouldRestart)
     {
@@ -266,17 +270,17 @@ void loop() {
                     if (lastTemp > tempMax || lastAQI > aqiMax)
                     {
                         targetAngle = 0;
-                        setWindow(0);
+                        setVMC(0);
                         Serial.println("Fermeture");
                     }
                     else if (lastTemp > tempMin) {
                         targetAngle = 90;
-                        setWindow(90);
+                        setVMC(90);
                         Serial.println("Ouverture");
                     }
                     else {
                         targetAngle = 0;
-                        setWindow(0);
+                        setVMC(0);
                         Serial.println("Fermeture");
                     }
                 }
