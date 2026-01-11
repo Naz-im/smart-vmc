@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 16,
     marginBottom: 20,
-    // Ombres
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

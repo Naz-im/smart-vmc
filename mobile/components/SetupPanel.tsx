@@ -7,7 +7,6 @@ import { AppButton } from './ui/AppButton';
 interface SetupPanelProps {
   bleStatus: string;
   isScanning: boolean;
-  // Simplification de la signature
   onConnect: (ssid: string, pass: string, lat: string, lon: string, ip: string) => void;
   savedIp: string;
 }
@@ -18,7 +17,6 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
   const [lat, setLat] = useState('45.188');
   const [lon, setLon] = useState('5.724');
   const [ip, setIp] = useState(savedIp);
-  // Suppression des states des seuils
 
   useEffect(() => {
     setIp(savedIp);
@@ -36,8 +34,6 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
         <AppInput style={{flex:1}} value={lat} onChangeText={setLat} placeholder="Lat" keyboardType='numeric' editable={!isScanning}/>
         <AppInput style={{flex:1}} value={lon} onChangeText={setLon} placeholder="Lon" keyboardType='numeric' editable={!isScanning}/>
       </View>
-      
-      {/* Suppression de la section Seuils Automatiques */}
 
       <Text style={styles.statusText}>{bleStatus}</Text>
       

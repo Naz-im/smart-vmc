@@ -20,7 +20,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      {/* Switch Row */}
       <View style={styles.switchRow}>
         <Text style={styles.label}>Mode Automatique</Text>
         <Switch 
@@ -32,7 +31,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         />
       </View>
 
-      {/* Manual Controls */}
       {!isAuto ? (
         <>
           <View style={styles.btnRow}>

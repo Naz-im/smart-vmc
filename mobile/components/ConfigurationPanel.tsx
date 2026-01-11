@@ -16,7 +16,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onUpdateThresholds, 
   isLoading 
 }) => {
-  // Initialisation avec des valeurs par défaut ou celles de l'API
+
   const [localTMax, setLocalTMax] = useState(String(windowState?.tMax ?? '25'));
   const [localTMin, setLocalTMin] = useState(String(windowState?.tMin ?? '19'));
   const [localAqiMax, setLocalAqiMax] = useState(String(windowState?.aqiMax ?? '50'));

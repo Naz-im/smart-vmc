@@ -7,7 +7,7 @@ export const AppInput: React.FC<AppInputProps> = ({ style, ...props }) => {
   return (
     <TextInput
       style={[styles.input, style]}
-      placeholderTextColor="#9CA3AF" // Gris moderne par défaut
+      placeholderTextColor="#9CA3AF"
       {...props}
     />
   );

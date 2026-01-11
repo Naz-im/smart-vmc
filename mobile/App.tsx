@@ -40,7 +40,7 @@ function App(): React.JSX.Element {
     lat: string, 
     lon: string, 
   ) => {
-    // Simplification de l'appel à scanAndConfigure
+
     scanAndConfigure(ssid, pass, lat, lon, () => {
         
         setIsAutoConnecting(true);

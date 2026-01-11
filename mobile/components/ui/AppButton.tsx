@@ -19,8 +19,8 @@ export const AppButton: React.FC<AppButtonProps> = ({
   // Définition des couleurs selon la variante
   const getBackgroundColor = () => {
     if (variant === 'outline') return '#374151';
-    if (variant === 'danger') return '#EF4444'; // Rouge moderne
-    return '#007A5E'; // Vert ENSIMAG par défaut
+    if (variant === 'danger') return '#EF4444'; 
+    return '#007A5E';
   };
 
   const getTextColor = () => {
@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    // Ombre légère pour les boutons pleins
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
