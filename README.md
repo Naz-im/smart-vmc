@@ -95,50 +95,14 @@ Notre projet consiste à réaliser un dispositif IoT permettant d'ajuster automa
 - Tests d'intégration : envoi de télémétrie + réaction automatique.
 - Tests d'acceptation utilisateur : scénarios (pluie, vent fort, obstruction) avec résultats attendus.
 
-## Manuel d'utilisation
+## Structure du projet
 
-### Prérequis
-
-- Avoir **Node.js 18+** installé
-- Avoir **npm** installé
-- Avoir android studio installé
-
-### Démarrer l’application mobile (uniquement sur Android)
-
-Dans un terminal:
-```bash
-cd mobile
-npm install
-npm start
-```
-
-Dans un autre:
-```bash
-cd mobile
-npm run android
-```
-
-### Utilisation
-
-#### Fonctionnalités de l’application mobile
-
-1. **Afficher les données météo** : Consulter en temps réel la pollution, l’ensoleillement, la vitesse du vent et la température
-
-2. **Contrôler la fenêtre** :
-    - Activer/désactiver le mode automatique
-    - Cliquer sur les boutons « Ouvrir la fenêtre » ou « Fermer la fenêtre » (lorsque le mode automatique est désactivé)
-
-3. **Surveiller l’état** : Voir l’état actuel de la fenêtre (ouverte/fermée) et l’heure de la dernière mise à jour
-4. Interface mobile native optimisée pour le tactile
-
-#### Comprendre le mode automatique
-
-Lorsque le **mode automatique est ACTIVÉ** :
-- Le système contrôle automatiquement la fenêtre
-- La fenêtre s’ouvre lorsque les conditions sont favorables (bonne qualité de l’air, vent modéré, bon ensoleillement)
-- La fenêtre se ferme lorsque les conditions sont défavorables (pollution élevée, vent fort)
-
-Lorsque le **mode automatique est DÉSACTIVÉ** :
-- Vous avez le contrôle manuel de la fenêtre
-- Cliquez sur « Ouvrir la fenêtre » ou « Fermer la fenêtre » pour la contrôler manuellement
-- Slider pour contrôler l'angle d'ouverture
+- `firmware/` : code embarqué pour ESP32
+- `docs/` : documentation technique et utilisateur
+- `Impression3DetDecoupe/` : fichiers pour impression 3D et découpe laser
+-`mobile/` : code source de l'application mobile contenant principalement:
+	- `android/` : code source Android pour la compilation, la génération de l'APK etc.
+	- `components/` : composants réutilisables de l'application mobile
+	- `hooks/` : hooks personnalisés pour la gestion de l'état et des effets secondaires
+	- `App.tsx` : point d'entrée principal de l'application mobile
+	- (Le reste des fichiers sont des configurations pour les IDE ou autres outils de développement)
