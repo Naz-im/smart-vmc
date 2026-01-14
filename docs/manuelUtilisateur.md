@@ -87,3 +87,41 @@ Si vous souhaitez installer l'application sur un téléphone sans utiliser le mo
      ```
 
 L'application devrait maintenant être installée et prête à l'emploi sur votre appareil Android.
+
+## Utilisation de l'application
+
+L'application mobile permet de surveiller et de contrôler le dispositif de ventilation. Voici les principales fonctionnalités :
+
+### Première connexion
+
+- Ouvrez l'application sur votre appareil Android.
+- L'application doit tout d'abord permettre de configurer les paramètres wi-fi pour que l'ESP32 puisse se connecter à votre réseau domestique.
+- Suivez les instructions à l'écran pour entrer le SSID et le mot de passe de votre réseau Wi-Fi. Vous verrer également la possibilité de configurer la latitude et la longitude pour la récupération des données météo. (De base celle de Grenoble est configurée).
+
+<p align="center">
+    <img src="assets/FirstConnection.png" alt="First Connection" width="300"/>
+</p>
+
+### Dashboard principal
+
+- Après la connexion, vous serez redirigé vers le tableau de bord principal. (Il n'est plus nécessaire de se reconnecter à chaque ouverture de l'application, les paramètres sont sauvegardés localement).
+- Le tableau de bord affiche l'état actuel du clapet de ventilation (ouvert/fermé), le pourcentage d'ouverture, ainsi que les données météo et qualité de l'air en temps réel.
+
+<p align="center">
+    <img src="assets/Dashboard.png" alt="Dashboard" width="300"/>
+</p>
+
+D'ici, vous pouvez switcher entre le mode automatique et manuel, une fois en mode manuel vous pouvez régler l'ouverture du clapet via le slider ou les boutons d'ouverture/fermeture rapide.
+
+<p align="center">
+    <img src="assets/ManualControl.png" alt="Manual Control" width="300"/>
+</p>
+
+### Paramétrage des seuils
+
+- Accédez à l'écran des paramètres en cliquant sur l'icône d'engrenage suivi de reglages.
+- Ici, vous pouvez définir les seuils pour le mode automatique.
+
+<p align="center">
+    <img src="assets/Settings.png" alt="Settings" width="300"/>
+</p>
