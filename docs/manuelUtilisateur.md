@@ -26,6 +26,14 @@ Le projet Le projet utilise PlatformIO pour la gestion du firmware, comme indiqu
 
 ![alt text](assets/SerialMonitor.png)
 
+*Note: Il est possible selon votre configuration machine que vscode n'ai pas les droits nécessaires pour accéder au port série. Dans ce cas, vous pouvez utiliser une solution immédiate mais pas très sécurisée:*
+
+```bash
+sudo chmod 666 /dev/ttyUSB0
+```
+
+*Remplacez `/dev/ttyUSB0` par le port série correspondant à votre ESP32.*
+
 ### Lancement de l'application mobile (Mode développement)
 
 L'application mobile est développée avec React Native. Voici comment la lancer en mode développement.
