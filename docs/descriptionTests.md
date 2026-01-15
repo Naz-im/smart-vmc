@@ -24,9 +24,9 @@ Ces tests vérifient que l'algorithme de décision (Seuils Température/Pollutio
 2.  Ouvrez un terminal dans le dossier `firmware/` (ou utilisez le terminal PlatformIO dans VSCode).
 3.  Exécutez la commande :
 
-\`\`\`bash
+```bash
 pio test -e esp32dev
-\`\`\`
+```
 
 ### Résultats attendus
 Vous devriez voir une série de succès (PASSED) correspondant aux scénarios :
