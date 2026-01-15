@@ -54,11 +54,6 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
       }
     }
 
-    NotificationService.displayNotification(
-      'État de la VMC Mis à Jour',
-      `Test`
-    );
-
     prevIsOpenRef.current = currentIsOpen;
 
   }, [windowState?.isOpen]);
