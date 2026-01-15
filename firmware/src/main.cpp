@@ -8,6 +8,9 @@
 #include <Preferences.h>
 
 #define SERVO_PIN 13
+#define CURRENT_SENSOR_PIN 34
+#define MAX_CURRENT_THRESHOLD 2500
+
 Servo windowServo;
 Preferences preferences;
 WebServer server(3001);
@@ -33,6 +36,9 @@ bool isOpen = false;
 bool autoMode = true;
 int targetAngle = 0;
 
+bool safetyLockout = false;
+int lastCurrentReading = 0;
+
 float lastTemp = 0.0;
 int lastAQI = 0;
 unsigned long lastWeatherCheck = 0;
@@ -41,12 +47,36 @@ int currentAngle = -1;
 
 bool shouldRestart = false;
 
+// Vérifie l'état de la VMC (surtension/surchauffe)
+bool checkSafety() {
+    int sensorValue = analogRead(CURRENT_SENSOR_PIN);
+    lastCurrentReading = sensorValue;
+
+    if (sensorValue > MAX_CURRENT_THRESHOLD) {
+        Serial.printf("Surintensité détectée (%d). Arrêt.\n", sensorValue);
+        return false;
+    }
+    return true;
+}
+
 // Change l'ouverture de la ventilation
 void setVMC(int angle) {
+    if (safetyLockout) return;
+
+    if (!checkSafety()) {
+        safetyLockout = true;
+        windowServo.detach();
+        return;
+    }
+
     if (angle < 0) angle = 0;
     if (angle > 90) angle = 90;
     
     if (currentAngle == angle) return;
+
+    if (!windowServo.attached()) {
+        windowServo.attach(SERVO_PIN);
+    }
 
     windowServo.write(angle);
     currentAngle = angle;
@@ -63,6 +93,10 @@ void handleStatus() {
     doc["aqi"] = lastAQI;
     doc["targetAngle"] = targetAngle;
     doc["autoMode"] = autoMode;
+    
+    doc["safetyLockout"] = safetyLockout;
+    doc["currentLoad"] = lastCurrentReading;
+    
     doc["tMax"] = tempMax; 
     doc["tMin"] = tempMin; 
     doc["aqiMax"] = aqiMax; 
@@ -98,21 +132,30 @@ void handleControl() {
     
     bool thresholdsUpdated = false;
 
+    if (doc.containsKey("resetSafety") && doc["resetSafety"] == true) {
+        safetyLockout = false;
+        if (!checkSafety()) {
+            safetyLockout = true;
+        }
+    }
+
     if (doc.containsKey("autoMode")) {
         autoMode = doc["autoMode"];
     }
     
-    if (doc.containsKey("angle")) {
-        autoMode = false;
-        targetAngle = doc["angle"];
-        setVMC(targetAngle);
-    } 
-    else if (doc.containsKey("action")) {
-        autoMode = false;
-        String action = doc["action"];
-        if (action == "open") targetAngle = 90;
-        if (action == "close") targetAngle = 0;
-        setVMC(targetAngle);
+    if (!safetyLockout) {
+        if (doc.containsKey("angle")) {
+            autoMode = false;
+            targetAngle = doc["angle"];
+            setVMC(targetAngle);
+        } 
+        else if (doc.containsKey("action")) {
+            autoMode = false;
+            String action = doc["action"];
+            if (action == "open") targetAngle = 90;
+            if (action == "close") targetAngle = 0;
+            setVMC(targetAngle);
+        }
     }
     
     preferences.begin("config", false);
@@ -148,6 +191,7 @@ void handleControl() {
     state["aqi"] = lastAQI;
     state["targetAngle"] = targetAngle;
     state["autoMode"] = autoMode;
+    state["safetyLockout"] = safetyLockout;
     state["tMax"] = tempMax; 
     state["tMin"] = tempMin; 
     state["aqiMax"] = aqiMax; 
@@ -166,7 +210,6 @@ class ConfigCallbacks : public BLECharacteristicCallbacks {
             int s2 = data.indexOf(';', s1 + 1);
             int s3 = data.indexOf(';', s2 + 1);
             
-            // On vérifie qu'on a les 4 champs fondamentaux
             if (s3 > 0) {
                 wifi_ssid = data.substring(0, s1);
                 wifi_pass = data.substring(s1 + 1, s2);
@@ -198,7 +241,6 @@ void setup() {
     wifi_pass = preferences.getString("pass", "");
     latitude = preferences.getFloat("lat", 45.18);
     longitude = preferences.getFloat("lon", 5.72);
-    // On charge les seuils s'ils existent, sinon on garde les valeurs par défaut
     tempMax = preferences.getFloat("tmax", 30.0);
     tempMin = preferences.getFloat("tmin", 18.0);
     aqiMax = preferences.getInt("aqmax", 50);
@@ -266,7 +308,7 @@ void loop() {
                 Serial.println("🌡 Température: " + String(lastTemp) + " °C, AQI: " + String(lastAQI));
                 if (doc["current"]["european_aqi"].isNull()) lastAQI = 20;
                 
-                if (autoMode) {
+                if (autoMode && !safetyLockout) {
                     if (lastTemp > tempMax || lastAQI > aqiMax)
                     {
                         targetAngle = 0;
