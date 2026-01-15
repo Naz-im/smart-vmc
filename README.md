@@ -100,7 +100,7 @@ Notre projet consiste à réaliser un dispositif IoT permettant d'ajuster automa
 - `firmware/` : code embarqué pour ESP32
 - `docs/` : documentation technique et utilisateur
 - `Impression3DetDecoupe/` : fichiers pour impression 3D et découpe laser
--`mobile/` : code source de l'application mobile contenant principalement:
+- `mobile/` : code source de l'application mobile contenant principalement:
 	- `android/` : code source Android pour la compilation, la génération de l'APK etc.
 	- `components/` : composants réutilisables de l'application mobile
 	- `hooks/` : hooks personnalisés pour la gestion de l'état et des effets secondaires
