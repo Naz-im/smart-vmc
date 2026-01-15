@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card } from './ui/Card';
 import { StatusDisplay } from './dashboard/StatusDisplay'; 
 import { SensorRow } from './dashboard/SensorRow'; 
 import { ControlPanel } from './dashboard/ControlPanel'; 
 import { WindowState } from '../hooks/useWindowApi';
+import NotificationService from '../services/NotificationService';
 
 interface DashboardPanelProps {
   windowState: WindowState | null;
@@ -22,6 +23,46 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
   onResetSafety
 }) => {
   
+  const prevIsOpenRef = useRef<boolean | null>(null);
+
+  useEffect(() => {
+    NotificationService.requestPermission();
+  }, []);
+
+  useEffect(() => {
+    if (!windowState) return;
+
+    const currentIsOpen = windowState.isOpen;
+    const prevIsOpen = prevIsOpenRef.current;
+
+    if (prevIsOpen === null) {
+      prevIsOpenRef.current = currentIsOpen;
+      return;
+    }
+
+    if (prevIsOpen !== currentIsOpen) {
+      if (currentIsOpen) {
+        NotificationService.displayNotification(
+          'VMC Ouverte 🌬️',
+          `La VMC s'est ouverte (Temp: ${windowState.temp}°C)`
+        );
+      } else {
+        NotificationService.displayNotification(
+          'VMC Fermée 🔒',
+          'La VMC est maintenant fermée.'
+        );
+      }
+    }
+
+    NotificationService.displayNotification(
+      'État de la VMC Mis à Jour',
+      `Test`
+    );
+
+    prevIsOpenRef.current = currentIsOpen;
+
+  }, [windowState?.isOpen]);
+
   return (
     <View> 
       <Card style={styles.container}>
