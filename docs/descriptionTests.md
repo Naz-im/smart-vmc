@@ -49,9 +49,9 @@ Ces tests vérifient que l'interface utilisateur réagit correctement aux donné
 1.  Ouvrez un terminal dans le dossier `mobile/`.
 2.  Exécutez la commande :
 
-\`\`\`bash
+```bash
 npm test
-\`\`\`
+```
 
 ### Ce qui est testé
 * **StatusDisplay** : Vérifie que le sens interdit rouge s'affiche en cas de sécurité active.
@@ -73,9 +73,9 @@ Ce script automatique ("Robot") se comporte comme une application mobile. Il env
 2.  Récupérez son **adresse IP** (via le Moniteur Série ou l'écran de l'application).
 3.  À la racine du projet, lancez :
 
-\`\`\`bash
+```bash
 node scripts/test-api.js <IP_DE_VOTRE_ESP32>
-\`\`\`
+```
 *Exemple : `node scripts/test-api.js 192.168.1.45`*
 
 ### Scénario exécuté
