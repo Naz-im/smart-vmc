@@ -28,7 +28,16 @@ function App(): React.JSX.Element {
   };
 
   const { bleStatus, isScanning, scanAndConfigure, scanAndGetIp } = useBLE();
-  const { windowState, fetchStatus, sendCommand, sendAngle, toggleAutoMode, updateThresholds, isLoading } = useWindowApi(serverIp);
+  const { 
+    windowState, 
+    fetchStatus, 
+    sendCommand, 
+    sendAngle, 
+    toggleAutoMode, 
+    resetSafety,
+    updateThresholds, 
+    isLoading 
+} = useWindowApi(serverIp);
 
   useEffect(() => { 
     if (tab === 'DASHBOARD') fetchStatus();
@@ -81,12 +90,13 @@ function App(): React.JSX.Element {
         )}
 
         {tab === 'DASHBOARD' && (
-            <DashboardPanel 
-                windowState={windowState}
-                onToggleAuto={toggleAutoMode}
-                onCommand={sendCommand}
-                onAngleChange={sendAngle}
-            />
+          <DashboardPanel 
+            windowState={windowState}
+            onToggleAuto={toggleAutoMode}
+            onCommand={sendCommand}
+            onAngleChange={sendAngle}
+            onResetSafety={resetSafety}
+          />
         )}
 
         {tab === 'CONFIGURATION' && (
