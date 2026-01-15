@@ -5,19 +5,45 @@ import { AppButton } from '../ui/AppButton';
 
 interface ControlPanelProps {
   isAuto: boolean;
+  isLocked?: boolean; // Nouveau prop
   targetAngle: number;
   onToggleAuto: (value: boolean) => void;
   onCommand: (action: 'open' | 'close') => void;
   onAngleChange: (angle: number) => void;
+  onResetSafety: () => void; // Nouvelle action
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
   isAuto,
+  isLocked,
   targetAngle,
   onToggleAuto,
   onCommand,
-  onAngleChange
+  onAngleChange,
+  onResetSafety
 }) => {
+
+  // Cas critique : Système bloqué
+  if (isLocked) {
+    return (
+        <View style={[styles.container, { borderColor: '#DC2626', borderWidth: 2 }]}>
+            <Text style={[styles.label, {color: '#DC2626', marginBottom: 10}]}>
+                SYSTÈME VERROUILLÉ
+            </Text>
+            <Text style={styles.hintText}>
+                Une surintensité a été détectée. Vérifiez que rien ne bloque le clapet avant de réarmer.
+            </Text>
+            <AppButton 
+                title="DÉBLOQUER / RÉARMER" 
+                variant="danger" 
+                onPress={onResetSafety}
+                style={{marginTop: 15}}
+            />
+        </View>
+    );
+  }
+
+  // Cas normal
   return (
     <View style={styles.container}>
       <View style={styles.switchRow}>
