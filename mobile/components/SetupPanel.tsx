@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform, Alert } from 'react-native';
 import { Card } from './ui/Card';
 import { AppInput } from './ui/AppInput';
 import { AppButton } from './ui/AppButton';
+
+import Geolocation from 'react-native-geolocation-service';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 interface SetupPanelProps {
   bleStatus: string;
@@ -22,6 +25,47 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
     setIp(savedIp);
   }, [savedIp]);
 
+  // Logique de récupération GPS
+  useEffect(() => {
+    const getLocation = async () => {
+      try {
+        const permissionType = Platform.OS === 'ios' 
+          ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE 
+          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+
+        const result = await check(permissionType);
+        
+        let hasPermission = result === RESULTS.GRANTED;
+        
+        if (result === RESULTS.DENIED) {
+          const requestResult = await request(permissionType);
+          hasPermission = requestResult === RESULTS.GRANTED;
+        }
+
+        if (!hasPermission) {
+          console.log('Permission de localisation refusée');
+          return;
+        }
+
+        Geolocation.getCurrentPosition(
+          (position) => {
+            setLat(position.coords.latitude.toString());
+            setLon(position.coords.longitude.toString());
+          },
+          (error) => {
+            console.log('Erreur GPS:', error.code, error.message);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+
+    getLocation();
+  }, []);
+
   return (
     <Card>
       <Text style={styles.sectionTitle}>Configuration</Text>
@@ -39,7 +83,6 @@ const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnec
       
       <AppButton 
         title={isScanning ? 'ENVOI EN COURS...' : 'ENVOYER CONFIG'}
-        // Simplification de l'appel
         onPress={() => onConnect(ssid, password, lat, lon, ip)}
         isLoading={isScanning}
       />
