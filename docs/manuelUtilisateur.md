@@ -75,6 +75,10 @@ L'application devrait se lancer sur l'émulateur ou l'appareil connecté. Vous p
 
 Si vous souhaitez installer l'application sur un téléphone sans utiliser le mode développement (usage "client"), vous devez générer un fichier APK.
 
+Pour des notions de praticité, un apk de l'état du projet au rendu est disponible dans le dossier `mobile/apk`
+
+Sinon vous pouvez le générer:
+
 1. Générer l'APK en mode release avec la commande :
    ```bash
    cd android
@@ -97,7 +101,7 @@ L'application mobile permet de surveiller et de contrôler le dispositif de vent
 
 - Ouvrez l'application sur votre appareil Android.
 - L'application doit tout d'abord permettre de configurer les paramètres wi-fi pour que l'ESP32 puisse se connecter à votre réseau domestique.
-- Suivez les instructions à l'écran pour entrer le SSID et le mot de passe de votre réseau Wi-Fi. Vous verrer également la possibilité de configurer la latitude et la longitude pour la récupération des données météo. (De base celle de Grenoble est configurée).
+- Suivez les instructions à l'écran pour entrer le SSID et le mot de passe de votre réseau Wi-Fi. Vous verrer également la possibilité de configurer la latitude et la longitude pour la récupération des données météo, celle-ci sont pré-remplis selon votre position GPS si vous avez autorisé l'application à y accéder sinon par défaut sur Grenoble.
 
 <p align="center">
     <img src="assets/FirstConnection.png" alt="First Connection" width="300"/>

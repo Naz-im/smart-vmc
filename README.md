@@ -105,4 +105,5 @@ Notre projet consiste à réaliser un dispositif IoT permettant d'ajuster automa
 	- `components/` : composants réutilisables de l'application mobile
 	- `hooks/` : hooks personnalisés pour la gestion de l'état et des effets secondaires
 	- `App.tsx` : point d'entrée principal de l'application mobile
+	- `apk/` : APK pré-généré de l'application mobile pour installation directe
 	- (Le reste des fichiers sont des configurations pour les IDE ou autres outils de développement)
