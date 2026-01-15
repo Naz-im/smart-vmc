@@ -1,12 +1,25 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { AppButton } from '../ui/AppButton';
 
 interface StatusDisplayProps {
   isOpen: boolean;
+  isLocked?: boolean;
 }
 
-export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen }) => {
+export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen, isLocked }) => {
+  
+  if (isLocked) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.emoji}>⚠️</Text>
+        <Text style={[styles.text, { color: '#DC2626' }]}>
+          SÉCURITÉ ACTIVE
+        </Text>
+        <Text style={styles.subtext}>Moteur bloqué</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>
@@ -35,8 +48,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '800',
     letterSpacing: 0.5,
+    textAlign: 'center',
   },
-  refreshButton: {
-    marginTop: 15,
+  subtext: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 5,
   }
 });
