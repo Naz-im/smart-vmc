@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card } from './ui/Card';
-import { AppButton } from './ui/AppButton';
 import { StatusDisplay } from './dashboard/StatusDisplay'; 
 import { SensorRow } from './dashboard/SensorRow'; 
 import { ControlPanel } from './dashboard/ControlPanel'; 
@@ -12,6 +11,7 @@ interface DashboardPanelProps {
   onToggleAuto: (value: boolean) => void;
   onCommand: (action: 'open' | 'close') => void;
   onAngleChange: (val: number) => void;
+  onResetSafety: () => void; // Nouveau prop
 }
 
 const DashboardPanel: React.FC<DashboardPanelProps> = ({ 
@@ -19,14 +19,16 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
   onToggleAuto, 
   onCommand, 
   onAngleChange,
+  onResetSafety
 }) => {
   
-
   return (
     <View> 
-      
       <Card style={styles.container}>
-        <StatusDisplay isOpen={windowState?.isOpen ?? false} />
+        <StatusDisplay 
+            isOpen={windowState?.isOpen ?? false} 
+            isLocked={windowState?.safetyLockout} // Transmission du lock
+        />
         
         <SensorRow 
             temp={windowState?.temp} 
@@ -35,10 +37,12 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
 
         <ControlPanel 
             isAuto={windowState?.autoMode ?? true}
+            isLocked={windowState?.safetyLockout} // Transmission du lock
             targetAngle={windowState?.targetAngle ?? 0}
             onToggleAuto={onToggleAuto}
             onCommand={onCommand}
             onAngleChange={onAngleChange}
+            onResetSafety={onResetSafety}
         />
         
       </Card>
