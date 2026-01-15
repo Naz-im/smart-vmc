@@ -20,6 +20,7 @@ Le projet Le projet utilise PlatformIO pour la gestion du firmware, comme indiqu
 - PlatformIO détectera automatiquement le fichier `platformio.ini`.
 - Connecter l'ESP32 via USB à l'ordinateur.
 - Lorsque vous êtes prêt à flasher, placer vous sur le fichier `src/main.cpp` et cliquer sur l'icône "Upload" dans la barre d'outils en bas de VSCode.
+
 ![alt text](assets/Upload.png)
 - Attendre la fin du processus de compilation et de flashage. Vous verrez les logs dans la console PlatformIO.
 - Pour vérifier que le firmware fonctionne, ouvrez le moniteur série en cliquant sur l'icône "Serial Monitor" dans la barre d'outils afin de voir les messages de debug.
