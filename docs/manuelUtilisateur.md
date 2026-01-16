@@ -122,6 +122,12 @@ D'ici, vous pouvez switcher entre le mode automatique et manuel, une fois en mod
     <img src="assets/ManualControl.png" alt="Manual Control" width="300"/>
 </p>
 
+En cas d'activation de la sécurité de blocage, un message d'alerte s'affichera:
+
+<p align="center">
+    <img src="assets/Error.jpg" alt="Alert" width="300"/>
+</p>
+
 ### Paramétrage des seuils
 
 - Accédez à l'écran des paramètres en cliquant sur l'icône d'engrenage suivi de reglages.
