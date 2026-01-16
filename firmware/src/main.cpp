@@ -1,23 +1,8 @@
-#include <Arduino.h>
-#include <WiFi.h>
-#include <HTTPClient.h>
-#include <WebServer.h>
-#include <ArduinoJson.h>
-#include <ESP32Servo.h>
-#include <NimBLEDevice.h>
-#include <Preferences.h>
-
-#define SERVO_PIN 13
-#define CURRENT_SENSOR_PIN 34
-#define MAX_CURRENT_THRESHOLD 2500
+#include <main.hpp>
 
 Servo windowServo;
 Preferences preferences;
 WebServer server(3001);
-
-#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHAR_CONFIG_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
-#define CHAR_IP_UUID "12345678-1234-1234-1234-1234567890ab"
 
 BLECharacteristic *pIpChar;
 

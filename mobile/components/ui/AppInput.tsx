@@ -1,8 +1,24 @@
+/**
+ * @file AppInput.tsx
+ * @brief Champ de saisie stylé avec placeholder grisé
+ */
+
 import React from 'react';
 import { TextInput, StyleSheet, TextInputProps } from 'react-native';
 
+/**
+ * @interface AppInputProps
+ * @brief Propriétés du champ de saisie
+ * @extends TextInputProps
+ */
 interface AppInputProps extends TextInputProps {}
 
+/**
+ * @function AppInput
+ * @brief Champ de saisie réutilisable
+ * @param {AppInputProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} Input stylé
+ */
 export const AppInput: React.FC<AppInputProps> = ({ style, ...props }) => {
   return (
     <TextInput

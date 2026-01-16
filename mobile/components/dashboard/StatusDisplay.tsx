@@ -1,13 +1,32 @@
+/**
+ * @file StatusDisplay.tsx
+ * @brief Affichage de l'état global de la VMC (ouverte/fermée/verrouillée)
+ */
+
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
+/**
+ * @interface StatusDisplayProps
+ * @brief Propriétés de l'affichage d'état
+ * @property {boolean} isOpen - Fenêtre ouverte ou non
+ * @property {boolean} [isLocked] - Verrouillage de sécurité actif
+ */
 interface StatusDisplayProps {
   isOpen: boolean;
   isLocked?: boolean;
 }
-
+/**
+ * @function StatusDisplay
+ * @brief Affiche l'état visuel de la VMC avec emoji et texte coloré
+ * @param {StatusDisplayProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} Vue d'état
+ */
 export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen, isLocked }) => {
-  
+  /**
+   * @section Cas verrouillé
+   * @brief Affiche l'alerte de sécurité
+   */
   if (isLocked) {
     return (
       <View style={styles.container}>
@@ -19,7 +38,10 @@ export const StatusDisplay: React.FC<StatusDisplayProps> = ({ isOpen, isLocked }
       </View>
     );
   }
-
+  /**
+   * @section Cas normal
+   * @brief Affiche OUVERTE (vert) ou FERMÉE (rouge)
+   */
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>

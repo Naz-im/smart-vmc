@@ -1,11 +1,28 @@
+/**
+ * @file TabHeader.tsx
+ * @brief Barre d’onglets principale
+ */
+
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
+/**
+ * @interface TabHeaderProps
+ * @brief Propriétés de l’en-tête d’onglets
+ * @property {'SETUP'|'DASHBOARD'|'CONFIGURATION'} activeTab - Onglet actif
+ * @property {(tab:'SETUP'|'DASHBOARD'|'CONFIGURATION')=>void} onTabChange - Callback de changement d’onglet
+ */
 interface TabHeaderProps {
   activeTab: 'SETUP' | 'DASHBOARD' | 'CONFIGURATION';
   onTabChange: (tab: 'SETUP' | 'DASHBOARD' | 'CONFIGURATION') => void;
 }
 
+/**
+ * @function TabHeader
+ * @brief Barre d’onglets principale
+ * @param {TabHeaderProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} En-tête avec trois onglets
+ */
 const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
   return (
     <View style={styles.header}>

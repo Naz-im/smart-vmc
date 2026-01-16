@@ -1,11 +1,27 @@
+/**
+ * @file SensorRow.tsx
+ * @brief Ligne d'affichage des valeurs de capteurs (température et AQI)
+ */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
+/**
+ * @interface SensorRowProps
+ * @brief Propriétés de la ligne de capteurs
+ * @property {number} temp - Température en degrés Celsius
+ * @property {number} aqi - Indice de qualité de l'air
+ */
 interface SensorRowProps {
   temp: number;
   aqi: number;
 }
 
+/**
+ * @function SensorRow
+ * @brief Affiche la température et l'AQI sous forme de badges
+ * @param {SensorRowProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} Ligne de capteurs
+ */
 export const SensorRow: React.FC<SensorRowProps> = ({ temp, aqi }) => {
   return (
     <View style={styles.row}>

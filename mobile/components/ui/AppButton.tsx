@@ -1,12 +1,29 @@
+/**
+ * @file AppButton.tsx
+ * @brief Bouton applicatif stylé (primaire, danger, outline) avec état de chargement
+ */
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, TouchableOpacityProps, ActivityIndicator } from 'react-native';
 
+/**
+ * @interface AppButtonProps
+ * @brief Propriétés du bouton
+ * @property {string} title - Libellé du bouton
+ * @property {'primary'|'danger'|'outline'} [variant='primary'] - Style visuel
+ * @property {boolean} [isLoading=false] - Affiche un spinner et désactive le bouton
+ */
 interface AppButtonProps extends TouchableOpacityProps {
   title: string;
   variant?: 'primary' | 'danger' | 'outline';
   isLoading?: boolean;
 }
 
+/**
+ * @function AppButton
+ * @brief Bouton réutilisable avec variantes et état de chargement
+ * @param {AppButtonProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} Bouton stylé
+ */
 export const AppButton: React.FC<AppButtonProps> = ({ 
   title, 
   variant = 'primary', 

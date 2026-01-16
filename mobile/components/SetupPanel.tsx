@@ -1,3 +1,8 @@
+/**
+ * @file SetupPanel.tsx
+ * @brief Panneau de configuration initiale avec saisie WiFi et localisation
+ */
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, Alert } from 'react-native';
 import { Card } from './ui/Card';
@@ -7,6 +12,14 @@ import { AppButton } from './ui/AppButton';
 import Geolocation from 'react-native-geolocation-service';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
+/**
+ * @interface SetupPanelProps
+ * @brief Propriétés du panneau de configuration initiale
+ * @property {string} bleStatus - Message de statut BLE
+ * @property {boolean} isScanning - Indique si un scan BLE est en cours
+ * @property {(ssid:string,pass:string,lat:string,lon:string,ip:string)=>void} onConnect - Callback d’envoi de config
+ * @property {string} savedIp - IP mémorisée de l’ESP32
+ */
 interface SetupPanelProps {
   bleStatus: string;
   isScanning: boolean;
@@ -14,6 +27,12 @@ interface SetupPanelProps {
   savedIp: string;
 }
 
+/**
+ * @function SetupPanel
+ * @brief Formulaire d’envoi des identifiants WiFi + localisation via BLE
+ * @param {SetupPanelProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} Carte de configuration initiale
+ */
 const SetupPanel: React.FC<SetupPanelProps> = ({ bleStatus, isScanning, onConnect, savedIp }) => {
   const [ssid, setSsid] = useState('');
   const [password, setPassword] = useState('');

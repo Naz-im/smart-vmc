@@ -1,8 +1,23 @@
+/**
+ * @file ControlPanel.tsx
+ * @brief Panneau de contrôle de la VMC (mode auto, commandes manuelles, slider)
+ */
 import React from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { AppButton } from '../ui/AppButton';
 
+/**
+ * @interface ControlPanelProps
+ * @brief Propriétés du panneau de contrôle
+ * @property {boolean} isAuto - Mode automatique activé
+ * @property {boolean} [isLocked] - Verrouillage de sécurité actif
+ * @property {number} targetAngle - Angle cible du servomoteur
+ * @property {(value:boolean)=>void} onToggleAuto - Callback de basculement auto/manuel
+ * @property {(action:'open'|'close')=>void} onCommand - Callback de commande ouvrir/fermer
+ * @property {(angle:number)=>void} onAngleChange - Callback de changement d'angle
+ * @property {()=>void} onResetSafety - Callback de réarmement de la sécurité
+ */
 interface ControlPanelProps {
   isAuto: boolean;
   isLocked?: boolean; // Nouveau prop
@@ -13,6 +28,16 @@ interface ControlPanelProps {
   onResetSafety: () => void; // Nouvelle action
 }
 
+/**
+ * @function ControlPanel
+ * @brief Panneau de contrôle principal de la VMC
+ * @param {ControlPanelProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} Panneau de contrôle
+ * @details
+ * Affiche deux modes :
+ * - Mode verrouillé : Bouton de réarmement sécurité
+ * - Mode normal : Switch auto/manuel, boutons ouvrir/fermer, slider d'angle
+ */
 export const ControlPanel: React.FC<ControlPanelProps> = ({
   isAuto,
   isLocked,
@@ -23,7 +48,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   onResetSafety
 }) => {
 
-  // Cas critique : Système bloqué
+  /**
+   * @section Cas critique : Système verrouillé
+   * @brief Affiche uniquement le bouton de réarmement
+   */
   if (isLocked) {
     return (
         <View style={[styles.container, { borderColor: '#DC2626', borderWidth: 2 }]}>
@@ -43,7 +71,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     );
   }
 
-  // Cas normal
+  /**
+   * @section Cas normal : Contrôles standard
+   * @brief Affiche switch auto, boutons et slider
+   */
   return (
     <View style={styles.container}>
       <View style={styles.switchRow}>

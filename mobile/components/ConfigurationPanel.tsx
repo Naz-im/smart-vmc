@@ -1,3 +1,8 @@
+/**
+ * @file ConfigurationPanel.tsx
+ * @brief Panneau de configuration des seuils de température et pollution
+ */
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Card } from './ui/Card';
@@ -5,12 +10,25 @@ import { AppInput } from './ui/AppInput';
 import { AppButton } from './ui/AppButton';
 import { WindowState } from '../hooks/useWindowApi';
 
+/**
+ * @interface ConfigurationPanelProps
+ * @brief Propriétés du panneau de configuration
+ * @property {WindowState|null} windowState - État courant de la fenêtre
+ * @property {(tMax:number,tMin:number,aqiMax:number)=>void} onUpdateThresholds - Callback de mise à jour des seuils
+ * @property {boolean} isLoading - Indique si une sauvegarde est en cours
+ */
 interface ConfigurationPanelProps {
   windowState: WindowState | null;
   onUpdateThresholds: (tMax: number, tMin: number, aqiMax: number) => void;
   isLoading: boolean;
 }
 
+/**
+ * @function ConfigurationPanel
+ * @brief Formulaire de configuration des seuils (température, AQI) pour le mode Auto
+ * @param {ConfigurationPanelProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} Carte de configuration
+ */
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({ 
   windowState, 
   onUpdateThresholds, 
@@ -29,6 +47,11 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
     }
   }, [windowState]);
 
+  /**
+   * @function handleSaveThresholds
+   * @brief Valide et transmet les nouveaux seuils
+   * @details Vérifie que les valeurs sont numériques avant d'appeler onUpdateThresholds
+   */
   const handleSaveThresholds = () => {
     const tMax = parseFloat(localTMax);
     const tMin = parseFloat(localTMin);

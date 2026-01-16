@@ -1,3 +1,8 @@
+/**
+ * @file DashboardPanel.tsx
+ * @brief Tableau de bord affichant l’état, les capteurs et les commandes de la VMC
+ */
+
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card } from './ui/Card';
@@ -7,6 +12,15 @@ import { ControlPanel } from './dashboard/ControlPanel';
 import { WindowState } from '../hooks/useWindowApi';
 import NotificationService from '../services/NotificationService';
 
+/**
+ * @interface DashboardPanelProps
+ * @brief Propriétés du tableau de bord
+ * @property {WindowState|null} windowState - État courant de la VMC
+ * @property {(value:boolean)=>void} onToggleAuto - Toggle du mode auto
+ * @property {(action:'open'|'close')=>void} onCommand - Commande ouvrir/fermer
+ * @property {(val:number)=>void} onAngleChange - Définir l’angle cible
+ * @property {()=>void} onResetSafety - Réarmer le verrouillage de sécurité
+ */
 interface DashboardPanelProps {
   windowState: WindowState | null;
   onToggleAuto: (value: boolean) => void;
@@ -15,6 +29,12 @@ interface DashboardPanelProps {
   onResetSafety: () => void; // Nouveau prop
 }
 
+/**
+ * @function DashboardPanel
+ * @brief Affiche l’état, les capteurs et les commandes de la VMC
+ * @param {DashboardPanelProps} props - Propriétés du composant
+ * @returns {React.JSX.Element} Vue tableau de bord
+ */
 const DashboardPanel: React.FC<DashboardPanelProps> = ({ 
   windowState, 
   onToggleAuto, 
