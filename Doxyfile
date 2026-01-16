@@ -1,4 +1,4 @@
-# Doxyfile 1.15.0 Configuration pour Smart VMC
+# Doxyfile 1.15.0 Configuration PDF (LaTeX) pour Smart VMC
 
 #---------------------------------------------------------------------------
 # Project related configuration options
@@ -6,7 +6,7 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "Smart VMC"
 PROJECT_NUMBER         = "1.0"
-PROJECT_BRIEF          = "Système de ventilation intelligent avec ESP32 et application mobile React Native"
+PROJECT_BRIEF          = "Système de ventilation intelligent (ESP32 + React Native)"
 PROJECT_LOGO           =
 OUTPUT_DIRECTORY       = ./docs/doxygen
 CREATE_SUBDIRS         = NO
@@ -33,6 +33,7 @@ OPTIMIZE_OUTPUT_FOR_C  = NO
 OPTIMIZE_OUTPUT_JAVA   = NO
 OPTIMIZE_FOR_FORTRAN   = NO
 OPTIMIZE_OUTPUT_VHDL   = NO
+# Configuration critique pour React/TypeScript
 EXTENSION_MAPPING      = ts=Javascript \
                          tsx=Javascript \
                          js=Javascript \
@@ -128,6 +129,7 @@ FILE_PATTERNS          = *.c \
 RECURSIVE              = YES
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
+# Exclusion des dossiers lourds pour optimiser la generation
 EXCLUDE_PATTERNS       = */node_modules/* \
                          */android/* \
                          */ios/* \
@@ -154,7 +156,7 @@ USE_MDFILE_AS_MAINPAGE =
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing
 #---------------------------------------------------------------------------
-SOURCE_BROWSER         = YES
+SOURCE_BROWSER         = NO
 INLINE_SOURCES         = NO
 STRIP_CODE_COMMENTS    = YES
 REFERENCED_BY_RELATION = NO
@@ -167,7 +169,7 @@ VERBATIM_HEADERS       = YES
 #---------------------------------------------------------------------------
 # Configuration options related to the HTML output
 #---------------------------------------------------------------------------
-GENERATE_HTML          = YES
+GENERATE_HTML          = NO
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
 HTML_HEADER            =
@@ -201,7 +203,7 @@ SERVER_BASED_SEARCH    = NO
 #---------------------------------------------------------------------------
 # Configuration options related to the LaTeX output
 #---------------------------------------------------------------------------
-GENERATE_LATEX         = NO
+GENERATE_LATEX         = YES
 LATEX_OUTPUT           = latex
 LATEX_CMD_NAME         = latex
 MAKEINDEX_CMD_NAME     = makeindex
@@ -214,7 +216,7 @@ LATEX_EXTRA_STYLESHEET =
 LATEX_EXTRA_FILES      =
 PDF_HYPERLINKS         = YES
 USE_PDFLATEX           = YES
-LATEX_BATCHMODE        = NO
+LATEX_BATCHMODE        = YES
 LATEX_HIDE_INDICES     = NO
 LATEX_BIB_STYLE        = plain
 
