@@ -6,6 +6,7 @@
 
 import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
+
 /**
  * @interface WindowState
  * @brief État de la fenêtre côté mobile
@@ -20,7 +21,6 @@ import { Alert } from 'react-native';
  * @property {number} tMin - Seuil température min
  * @property {number} aqiMax - Seuil AQI max
  */
-
 export interface WindowState {
   isOpen: boolean;
   temp: number;
@@ -96,6 +96,7 @@ export const useWindowApi = (serverIp: string) => {
           Alert.alert("Erreur", "Impossible d'envoyer la commande");
       }
   };
+  
   /**
    * @function sendAngle
    * @brief Positionne la fenêtre à un angle précis

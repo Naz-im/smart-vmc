@@ -117,12 +117,10 @@ INPUT                  = ./firmware/src \
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
-                         *.cpp \
                          *.h \
                          *.hpp \
                          *.ts \
                          *.tsx \
-                         *.js \
                          *.jsx \
                          *.md
 
@@ -140,7 +138,7 @@ EXCLUDE_PATTERNS       = */node_modules/* \
                          */__tests__/* \
                          *.test.tsx \
                          *.spec.tsx \
-                         *.d.ts
+                         *.d.ts \
 
 EXCLUDE_SYMBOLS        =
 EXAMPLE_PATH           =

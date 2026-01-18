@@ -8,11 +8,11 @@ import { useState, useEffect } from 'react';
 import { PermissionsAndroid, Platform, Alert } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
 import { encode, decode } from 'base-64';
+
 /**
  * @constant {string} SERVICE_UUID
  * @brief UUID du service BLE principal
  */
-
 const SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
 /**
  * @constant {string} CHAR_UUID
@@ -161,6 +161,7 @@ export const useBLE = () => {
       }
     });
   };
+
   /**
    * @function scanAndGetIp
    * @brief Scan et récupère l'adresse IP de l'ESP32 via BLE
@@ -174,7 +175,6 @@ export const useBLE = () => {
    * 5. Ferme la connexion
    * 6. Appelle le callback avec l'IP
    */
-
   const scanAndGetIp = (onFound: (ip: string) => void) => {
     if (isScanning) return;
     setIsScanning(true);

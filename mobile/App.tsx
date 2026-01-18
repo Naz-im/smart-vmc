@@ -65,6 +65,7 @@ function App(): React.JSX.Element {
   useEffect(() => { 
     if (tab === 'DASHBOARD') fetchStatus();
   }, [tab, fetchStatus]);
+  
   /**
    * @function handleConnect
    * @brief Connecte l'ESP32 au WiFi et récupère son adresse IP
@@ -78,7 +79,6 @@ function App(): React.JSX.Element {
    * 3. Scan l'adresse IP via BLE
    * 4. Bascule automatiquement au Dashboard si succès
    */
-
   const handleConnect = (
     ssid: string, 
     pass: string, 
